@@ -1,15 +1,13 @@
 package com.oa.task2do;
 
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -24,6 +22,18 @@ public class MainActivity extends ActionBarActivity {
                     .commit();
         }
     }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+    }
+
+//    void inflateTab(){
+//        LinearLayout functionsTab = (LinearLayout) findViewById(R.id.functionsTab);
+//        if (functionsTab.getVisibility()==View.GONE)
+//            functionsTab.setVisibility(View.VISIBLE);
+//        else functionsTab.setVisibility(View.GONE);
+//    }
 
 
     @Override
