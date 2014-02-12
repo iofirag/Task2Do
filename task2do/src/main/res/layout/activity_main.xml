@@ -11,26 +11,28 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="62dp"
         android:id="@+id/newTaskLine_button">
 
         <EditText
-            android:layout_width="316dp"
-            android:layout_height="61dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/etNewTask"
             android:layout_gravity="left|top"
             android:autoText="false"
             android:editable="false"
             android:enabled="true"
             android:focusableInTouchMode="true"
-            android:hint="New Task" />
+            android:hint="New Task"
+            android:layout_weight="0.85" />
 
         <ImageButton
-            android:layout_width="match_parent"
-            android:layout_height="61dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/imageButton"
             android:layout_gravity="right|top"
-            android:background="@android:drawable/ic_menu_send" />
+            android:background="@android:drawable/ic_menu_send"
+            android:layout_weight="0.15" />
 
     </LinearLayout>
 
@@ -42,10 +44,10 @@
         android:baselineAligned="false"
         android:measureWithLargestChild="false"
         android:textAlignment="center"
-        android:visibility="visible"
         android:gravity="center"
         android:weightSum="1"
-        android:id="@+id/functionsTab">
+        android:id="@+id/functionsTab"
+        android:visibility="gone">
 
         <ImageButton
             android:layout_width="wrap_content"
