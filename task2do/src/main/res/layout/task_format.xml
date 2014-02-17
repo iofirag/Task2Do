@@ -47,7 +47,7 @@
         android:gravity="center"
         android:weightSum="1"
         android:id="@+id/linearLayout"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <ImageButton
             android:layout_width="wrap_content"

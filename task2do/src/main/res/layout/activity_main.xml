@@ -26,13 +26,22 @@
             android:hint="New Task"
             android:layout_weight="0.85" />
 
-        <ImageButton
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button"
+            android:layout_weight="0.15"
+            android:background="@android:drawable/ic_menu_send" />
+
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/imageButton"
             android:layout_gravity="right|top"
             android:background="@android:drawable/ic_menu_send"
-            android:layout_weight="0.15" />
+            android:layout_weight="0.15"
+            android:visibility="gone" />
 
     </LinearLayout>
 
