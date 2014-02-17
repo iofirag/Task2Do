@@ -9,11 +9,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/datePicker"
-        android:layout_marginTop="152dp"
+        android:layout_marginTop="98dp"
         android:spinnersShown="false"
         android:measureAllChildren="false"
         android:longClickable="false"
-        android:calendarViewShown="false"
+        android:calendarViewShown="true"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -24,11 +24,11 @@
         android:text="set"
         android:id="@+id/button"
         android:layout_below="@+id/datePicker"
+        android:layout_marginLeft="188dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignRight="@+id/datePicker"
-        android:layout_alignEnd="@+id/datePicker"
-        android:layout_alignLeft="@+id/datePicker"
-        android:layout_alignStart="@+id/datePicker"
-        android:layout_marginLeft="122dp" />
+        android:layout_alignEnd="@+id/datePicker" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -37,10 +37,10 @@
         android:text="cancel"
         android:id="@+id/button2"
         android:layout_below="@+id/datePicker"
+        android:layout_alignRight="@+id/datePicker"
+        android:layout_alignEnd="@+id/datePicker"
+        android:layout_marginRight="139dp"
         android:layout_alignLeft="@+id/datePicker"
-        android:layout_alignStart="@+id/datePicker"
-        android:layout_marginRight="119dp"
-        android:layout_alignRight="@+id/button"
-        android:layout_alignEnd="@+id/button" />
+        android:layout_alignStart="@+id/datePicker" />
 
 </RelativeLayout>
