@@ -12,27 +12,27 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="62dp"
-        android:id="@+id/newTaskLine_button">
+        android:id="@+id/newTaskLine_button"
+        android:weightSum="1">
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:id="@+id/etNewTask"
-            android:layout_gravity="left|top"
-            android:autoText="false"
-            android:editable="false"
-            android:enabled="true"
+            android:layout_weight="0.98"
+            android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="New Task"
-            android:layout_weight="0.85" />
+            android:hint="enter new task here"
+            android:enabled="true"
+            android:onClick="showExtraOptions" />
 
-        <ImageButton
+        <Button
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/imageButton"
-            android:layout_gravity="right|top"
-            android:background="@android:drawable/ic_menu_send"
-            android:layout_weight="0.15" />
+            android:layout_height="wrap_content"
+            android:id="@+id/saveTastButton"
+            android:onClick="saveTask"
+            android:singleLine="true"
+            android:background="@drawable/abc_ic_go" />
 
     </LinearLayout>
 
@@ -46,7 +46,7 @@
         android:textAlignment="center"
         android:gravity="center"
         android:weightSum="1"
-        android:id="@+id/functionsTab"
+        android:id="@+id/extraOptions"
         android:visibility="gone">
 
         <ImageButton
