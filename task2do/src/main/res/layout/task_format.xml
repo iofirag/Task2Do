@@ -13,26 +13,29 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="309dp"
+            android:layout_height="fill_parent"
             android:id="@+id/taskText"
             android:lines="1"
-            android:layout_weight="0.95"
             android:layout_alignBottom="@+id/removeTaskButton"
             android:layout_alignParentTop="true"
-            android:text="task text" />
+            android:clickable="true"
+            android:onClick="editTask"
+            android:focusableInTouchMode="false"
+            android:focusable="false" />
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:id="@+id/removeTaskButton"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
             android:background="@drawable/abc_ic_clear_search_api_holo_light"
             android:layout_alignBottom="@+id/taskText"
-            android:layout_weight="0.05"
             android:lines="1"
-            android:layout_toRightOf="@+id/taskText" />
+            android:layout_toRightOf="@+id/taskText"
+            android:onClick="done"
+            android:clickable="true" />
     </LinearLayout>
 
 
