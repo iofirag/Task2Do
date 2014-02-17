@@ -2,7 +2,8 @@ package com.oa.task2do;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -17,28 +18,15 @@ public class MainActivity extends Activity {
 
     Singleton singleton=null;
     private TaskListBaseAdapter currentList;
+    private TextWatcher tw;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (!singleton.getInstance(this).getArrayList().isEmpty())
+        if (singleton.getInstance(this).getArrayList().isEmpty())
             restoreFromDb();
-        //getFromInternet();
-        //singleton.getInstance(this).getDb().onUpgrade(singleton.getInstance(this).getDb().getWritableDatabase(), 1,2);
-
-//        EditText txtEdit= (EditText) findViewById(R.id.etNewTask);
-//        txtEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if(hasFocus)
-//                {
-//                    //showExtraOptions(v);
-//                }
-//
-//            }
-//        });
-
-
 
         currentList = new TaskListBaseAdapter(this, singleton.getInstance(this).getArrayList());
         ListView listView = (ListView) findViewById(R.id.listView);
@@ -49,13 +37,33 @@ public class MainActivity extends Activity {
             }
         });
 
-    }
+        tw = new TextWatcher() {
+            LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
+            public void afterTextChanged(Editable s){
+                if (s.length()>0)
+                linearLayout.setVisibility(LinearLayout.VISIBLE);
+                else linearLayout.setVisibility(LinearLayout.GONE);
+            }
+            public void  beforeTextChanged(CharSequence s, int start, int count, int after){
+                if (count<0)
+                linearLayout.setVisibility(LinearLayout.GONE);
+            }
+            public void  onTextChanged (CharSequence s, int start, int before,int count) {
+                if (count<0)
+                linearLayout.setVisibility(LinearLayout.GONE);
+            }
+        };
+        EditText et = (EditText) findViewById(R.id.etNewTask);
+        et.addTextChangedListener(tw);
 
+
+    }
 
     @Override
     protected void onResume(){
         super.onResume();
         updateListView();
+        currentList.notifyDataSetChanged();
     }
 
 //    void inflateTab(){
@@ -74,17 +82,17 @@ public class MainActivity extends Activity {
 //        return true;
 //    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     /**
      * A placeholder fragment containing a simple view.
@@ -103,10 +111,15 @@ public class MainActivity extends Activity {
 //    }
 
 
-    public void showExtraOptions(View view)
+    public void showExtraOptions(View view,boolean hasFocus)
     {
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
-        linearLayout.setVisibility(1);
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listViewExtraOptions);
+        if (hasFocus){
+            linearLayout.setVisibility(LinearLayout.VISIBLE);
+        }
+        else{
+            linearLayout.setVisibility(LinearLayout.GONE);
+        }
     }
 
     public void restoreFromDb(){
@@ -115,6 +128,7 @@ public class MainActivity extends Activity {
             String str = new String( task.getTaskMessage() );
             singleton.getInstance(this).getArrayList().add(0,task);
         }
+        updateListView();
     }
 
     public void updateListView(){
@@ -135,6 +149,7 @@ public class MainActivity extends Activity {
     }
 
     public void done(View view) {
+
         ListView listView = (ListView) findViewById(R.id.listView);
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
@@ -175,6 +190,7 @@ public class MainActivity extends Activity {
 
             description.setText("");
             updateListView();
+
             //finish();
         }
     }

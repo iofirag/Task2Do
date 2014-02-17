@@ -49,7 +49,7 @@
         android:textAlignment="center"
         android:gravity="center"
         android:weightSum="1"
-        android:id="@+id/linearLayout"
+        android:id="@+id/listViewExtraOptions"
         android:visibility="gone">
 
         <ImageButton
