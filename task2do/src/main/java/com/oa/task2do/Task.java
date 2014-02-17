@@ -1,5 +1,7 @@
 package com.oa.task2do;
 
+import android.location.Location;
+
 import java.util.Date;
 
 /**
@@ -9,9 +11,16 @@ public class Task {
     int _id;
     private String _taskMessage ;
     private Date _date;
+    private Location _location;
 
     /*-----------Ctor---------------------------*/
     public Task(int id, String str, Date date) {
+        this._id = id;
+        this._taskMessage = str;
+        this._date = date;
+    }
+
+    public Task(int id, String str, Date date, Location) {
         this._id = id;
         this._taskMessage = str;
         this._date = date;

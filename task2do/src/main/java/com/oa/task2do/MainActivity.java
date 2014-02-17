@@ -2,6 +2,7 @@ package com.oa.task2do;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -66,9 +67,6 @@ public class MainActivity extends Activity {
 //    }
 
 
-<<<<<<< HEAD
-
-
 
 
 
@@ -80,15 +78,7 @@ public class MainActivity extends Activity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-=======
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
->>>>>>> 103e428bfb8c762122a76775baba0d2e1fc95a83
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
