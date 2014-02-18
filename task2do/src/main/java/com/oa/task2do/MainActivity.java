@@ -1,14 +1,18 @@
 package com.oa.task2do;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.List;
@@ -65,6 +69,97 @@ public class MainActivity extends Activity {
         updateListView();
         currentList.notifyDataSetChanged();
     }
+
+
+    public void clickAlarmButton (View view) {
+        // custom dialog
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.alarm);
+
+        // set the custom dialog components - text, image and button
+        TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
+        Button setButton = (Button) dialog.findViewById(R.id.alarmSetButton);
+        Button cancelButton = (Button) dialog.findViewById(R.id.alarmCancelButton);
+
+        // if button is clicked, close the custom dialog
+        setButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //save the time from timePicker object
+                dialog.dismiss();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+    public void clickDateButton (View view) {
+        // custom dialog
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.date);
+
+        // set the custom dialog components - text, image and button
+        DatePicker date = (DatePicker) findViewById(R.id.datePicker);
+        Button setButton = (Button) dialog.findViewById(R.id.dateSetButton);
+        Button cancelButton = (Button) dialog.findViewById(R.id.dateCancelButton);
+
+        // if button is clicked, close the custom dialog
+        setButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //save the time from datePicker object
+                dialog.dismiss();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+    public void clickLocationButton (View view) {
+        // custom dialog
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.location);
+
+        // set the custom dialog components - text, image and button
+        EditText locationText = (EditText) findViewById(R.id.location_input);
+        Button setButton = (Button) dialog.findViewById(R.id.locationSetButton);
+        Button cancelButton = (Button) dialog.findViewById(R.id.locationCancelButton);
+
+        // if button is clicked, close the custom dialog
+        setButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //save the location text from locationText object
+                dialog.dismiss();
+            }
+        });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+    public void clickVoiceButton (View view) {
+        // custom dialog
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.voice);
+        //
+        //
+        //
+        dialog.show();
+    }
+
+
 
 //    void inflateTab(){
 //        LinearLayout functionsTab = (LinearLayout) findViewById(R.id.functionsTab);
@@ -145,7 +240,6 @@ public class MainActivity extends Activity {
         Toast.makeText(MainActivity.this, "edited item : " + " " +
                 selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
         currentList.notifyDataSetChanged();
-
     }
 
     public void done(View view) {

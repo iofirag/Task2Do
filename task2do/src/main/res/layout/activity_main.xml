@@ -22,8 +22,9 @@
             android:layout_weight="0.98"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:hint="enter new task here"
-            android:enabled="true" />
+            android:hint="Enter new task here"
+            android:enabled="true"
+            android:lines="1" />
 
         <Button
             android:layout_width="wrap_content"
@@ -31,7 +32,8 @@
             android:id="@+id/saveTastButton"
             android:onClick="saveTask"
             android:singleLine="true"
-            android:background="@drawable/abc_ic_go" />
+            android:background="@drawable/abc_ic_go"
+            android:layout_weight="0.05" />
 
     </LinearLayout>
 
@@ -52,7 +54,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageButton2"
-            android:background="@android:drawable/ic_menu_recent_history" />
+            android:background="@android:drawable/ic_menu_recent_history"
+            android:onClick="clickAlarmButton" />
 
         <TableLayout
             android:layout_width="53dp"
@@ -63,7 +66,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageButton3"
-            android:background="@android:drawable/ic_menu_today" />
+            android:background="@android:drawable/ic_menu_today"
+            android:onClick="clickDateButton" />
 
         <TableLayout
             android:layout_width="62dp"
@@ -74,7 +78,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageButton4"
-            android:background="@android:drawable/ic_dialog_map" />
+            android:background="@android:drawable/ic_dialog_map"
+            android:onClick="clickLocationButton" />
 
         <TableLayout
             android:layout_width="61dp"
@@ -85,7 +90,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageButton5"
-            android:background="@android:drawable/ic_btn_speak_now" />
+            android:background="@android:drawable/ic_btn_speak_now"
+            android:onClick="clickVoiceButton" />
     </LinearLayout>
 
     <ListView

@@ -55,7 +55,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton1"
+            android:id="@+id/btAlarm"
             android:background="@android:drawable/ic_menu_recent_history" />
 
         <TableLayout
@@ -66,7 +66,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton2"
+            android:id="@+id/btDate"
             android:background="@android:drawable/ic_menu_today" />
 
         <TableLayout
@@ -77,7 +77,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton3"
+            android:id="@+id/btLocation"
             android:background="@android:drawable/ic_dialog_map" />
 
         <TableLayout
@@ -88,7 +88,7 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton4"
+            android:id="@+id/btVoice"
             android:background="@android:drawable/ic_btn_speak_now" />
     </LinearLayout>
 
