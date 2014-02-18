@@ -124,30 +124,30 @@ public class MainActivity extends Activity {
         dialog.show();
     }
     public void clickLocationButton (View view) {
-        // custom dialog
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.location);
-
-        // set the custom dialog components - text, image and button
-        EditText locationText = (EditText) findViewById(R.id.location_input);
-        Button setButton = (Button) dialog.findViewById(R.id.locationSetButton);
-        Button cancelButton = (Button) dialog.findViewById(R.id.locationCancelButton);
-
-        // if button is clicked, close the custom dialog
-        setButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //save the location text from locationText object
-                dialog.dismiss();
-            }
-        });
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
+//        // custom dialog
+//        final Dialog dialog = new Dialog(this);
+//        dialog.setContentView(R.layout.location);
+//
+//        // set the custom dialog components - text, image and button
+//        EditText locationText = (EditText) findViewById(R.id.location_input);
+//        Button setButton = (Button) dialog.findViewById(R.id.locationSetButton);
+//        Button cancelButton = (Button) dialog.findViewById(R.id.locationCancelButton);
+//
+//        // if button is clicked, close the custom dialog
+//        setButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //save the location text from locationText object
+//                dialog.dismiss();
+//            }
+//        });
+//        cancelButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//            }
+//        });
+//        dialog.show();
     }
     public void clickVoiceButton (View view) {
         // custom dialog

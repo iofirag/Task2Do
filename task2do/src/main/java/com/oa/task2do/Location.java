@@ -1,16 +1,7 @@
-/*
+
 package com.oa.task2do;
 
-import android.app.Activity;
-import android.location.Address;
-import android.location.Geocoder;
-import android.os.Bundle;
-import android.view.Display;
-import android.view.KeyEvent;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.TextView;
-
+/*
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;

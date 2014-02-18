@@ -2,7 +2,8 @@
 <resources>
 
     <string name="app_name">Task 2Do</string>
-    <string name="action_settings">Settings</string>
     <string name="enter_location">Enter location</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_location">Location</string>
 
 </resources>
