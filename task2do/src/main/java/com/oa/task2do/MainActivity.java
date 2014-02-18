@@ -70,21 +70,25 @@ public class MainActivity extends Activity  {
         currentList.notifyDataSetChanged();
     }
 
+    /* Time-Picker Dialog */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showTimePickerDialog(View v) {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getFragmentManager(), "timePicker");
     }
+    /* Date-Picker Dialog */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getFragmentManager(), "datePicker");
     }
+    /* Location Activity */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showLocationDialog(View v) {
         Intent intent = new Intent(this, LocationActivity.class);
         startActivity(intent);
     }
+    /* voice Dialog */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showVoiceDialog(View v) {
         DialogFragment newFragment = new VoiceFragment();
