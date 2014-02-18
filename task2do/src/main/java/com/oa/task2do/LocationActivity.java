@@ -1,7 +1,14 @@
-
 package com.oa.task2do;
 
-/*
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -14,7 +21,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class Location extends Activity {
+public class LocationActivity extends FragmentActivity {
 
     private final static DecimalFormat DF = new DecimalFormat("#.##");
 
@@ -27,12 +34,17 @@ public class Location extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        System.out.println("1111111111");
+
         setContentView(R.layout.location);
 
         //bind to layout
         mLocationIn = (EditText) findViewById(R.id.location_input);
         mLocationOut = (TextView) findViewById(R.id.location_output);
         mGeocoder = new Geocoder(this);
+
+        System.out.println("2222222222");
 
         //initialize the map object
         SupportMapFragment supportMapFragment =
@@ -55,13 +67,13 @@ public class Location extends Activity {
         });
     }
 
-*
+    /**
      * Lookup the address in input, format an output string and update map if possible
-
-
+     */
     private void lookUp(String addressString) {
         String out;
         try {
+            System.out.println("33333333333");
             //TODO: move geocoding to async task
             List<Address> addresses = mGeocoder.getFromLocationName(addressString, 1);
             if (addresses.size() >= 1) {
@@ -71,6 +83,7 @@ public class Location extends Activity {
                         + DF.format(address.getLatitude()) + " , "
                         + DF.format(address.getLongitude()) + ")";
                 updateMap(latLng);
+                System.out.println("444444444444");
             } else {
                 out = "Not found";
             }
@@ -80,11 +93,10 @@ public class Location extends Activity {
         mLocationOut.setText(out);
     }
 
-*
+    /**
      * Display a marker on the map and reposition the camera according to location
      * @param latLng
-
-
+     */
     private void updateMap(LatLng latLng){
         if (mGoogleMap==null){
             return; //no play services
@@ -102,6 +114,6 @@ public class Location extends Activity {
                 .zoom(15)
                 .build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPosition));
+        System.out.println("update-map-seccessfully");
     }
 }
-*/

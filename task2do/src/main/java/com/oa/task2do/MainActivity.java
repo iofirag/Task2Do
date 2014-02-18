@@ -1,23 +1,23 @@
 package com.oa.task2do;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.List;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity  {
 
 
     Singleton singleton=null;
@@ -70,60 +70,81 @@ public class MainActivity extends Activity {
         currentList.notifyDataSetChanged();
     }
 
-
-    public void clickAlarmButton (View view) {
-        // custom dialog
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.alarm);
-
-        // set the custom dialog components - text, image and button
-        TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
-        Button setButton = (Button) dialog.findViewById(R.id.alarmSetButton);
-        Button cancelButton = (Button) dialog.findViewById(R.id.alarmCancelButton);
-
-        // if button is clicked, close the custom dialog
-        setButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //save the time from timePicker object
-                dialog.dismiss();
-            }
-        });
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void showTimePickerDialog(View v) {
+        DialogFragment newFragment = new TimePickerFragment();
+        newFragment.show(getFragmentManager(), "timePicker");
     }
-    public void clickDateButton (View view) {
-        // custom dialog
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.date);
-
-        // set the custom dialog components - text, image and button
-        DatePicker date = (DatePicker) findViewById(R.id.datePicker);
-        Button setButton = (Button) dialog.findViewById(R.id.dateSetButton);
-        Button cancelButton = (Button) dialog.findViewById(R.id.dateCancelButton);
-
-        // if button is clicked, close the custom dialog
-        setButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //save the time from datePicker object
-                dialog.dismiss();
-            }
-        });
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        dialog.show();
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void showDatePickerDialog(View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getFragmentManager(), "datePicker");
     }
-    public void clickLocationButton (View view) {
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void showLocationDialog(View v) {
+//        DialogFragment newFragment = new LocationFragment();
+//        newFragment.show(getFragmentManager(), "location");
+        Intent intent = new Intent(this, LocationActivity.class);
+        startActivity(intent);
+    }
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public void showVoiceDialog(View v) {
+        DialogFragment newFragment = new VoiceFragment();
+        newFragment.show(getFragmentManager(), "voice");
+    }
+//    public void clickAlarmButton (View view) {
+//        // custom dialog
+//        final Dialog dialog = new Dialog(this);
+//        dialog.setContentView(R.layout.alarm);
+//
+//        // set the custom dialog components - text, image and button
+//        TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
+//        Button setButton = (Button) dialog.findViewById(R.id.alarmSetButton);
+//        Button cancelButton = (Button) dialog.findViewById(R.id.alarmCancelButton);
+//
+//        // if button is clicked, close the custom dialog
+//        setButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //save the time from timePicker object
+//                dialog.dismiss();
+//            }
+//        });
+//        cancelButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//            }
+//        });
+//        dialog.show();
+//    }
+//    public void clickDateButton (View view) {
+//        // custom dialog
+//        final Dialog dialog = new Dialog(this);
+//        dialog.setContentView(R.layout.date);
+//
+//        // set the custom dialog components - text, image and button
+//        DatePicker date = (DatePicker) findViewById(R.id.datePicker);
+//        Button setButton = (Button) dialog.findViewById(R.id.dateSetButton);
+//        Button cancelButton = (Button) dialog.findViewById(R.id.dateCancelButton);
+//
+//        // if button is clicked, close the custom dialog
+//        setButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //save the time from datePicker object
+//                dialog.dismiss();
+//            }
+//        });
+//        cancelButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dialog.dismiss();
+//            }
+//        });
+//        dialog.show();
+//    }
+ //   public void clickLocationButton (View view) {
 //        // custom dialog
 //        final Dialog dialog = new Dialog(this);
 //        dialog.setContentView(R.layout.location);
@@ -148,16 +169,16 @@ public class MainActivity extends Activity {
 //            }
 //        });
 //        dialog.show();
-    }
-    public void clickVoiceButton (View view) {
-        // custom dialog
-        final Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.voice);
-        //
-        //
-        //
-        dialog.show();
-    }
+//    }
+  //    public void clickVoiceButton (View view) {
+//        // custom dialog
+//        final Dialog dialog = new Dialog(this);
+//        dialog.setContentView(R.layout.voice);
+//        //
+//        //
+//        //
+//        dialog.show();
+//    }
 
 
 

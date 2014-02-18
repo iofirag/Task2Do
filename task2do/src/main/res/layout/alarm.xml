@@ -10,8 +10,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/timePicker"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="131dp" />
+        android:layout_centerHorizontal="true" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -20,11 +19,11 @@
         android:text="cancel"
         android:id="@+id/alarmCancelButton"
         android:layout_below="@+id/timePicker"
-        android:layout_alignLeft="@+id/timePicker"
-        android:layout_alignStart="@+id/timePicker"
         android:layout_alignRight="@+id/timePicker"
         android:layout_alignEnd="@+id/timePicker"
-        android:layout_marginRight="108dp" />
+        android:layout_marginLeft="108dp"
+        android:layout_alignLeft="@+id/alarmSetButton"
+        android:layout_alignStart="@+id/alarmSetButton" />
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -33,9 +32,9 @@
         android:text="set"
         android:id="@+id/alarmSetButton"
         android:layout_alignTop="@+id/alarmCancelButton"
+        android:layout_alignLeft="@+id/timePicker"
+        android:layout_alignStart="@+id/timePicker"
+        android:layout_marginRight="110dp"
         android:layout_alignRight="@+id/timePicker"
-        android:layout_alignEnd="@+id/timePicker"
-        android:layout_marginLeft="113dp"
-        android:layout_alignLeft="@+id/alarmCancelButton"
-        android:layout_alignStart="@+id/alarmCancelButton" />
+        android:layout_alignEnd="@+id/timePicker" />
 </RelativeLayout>
