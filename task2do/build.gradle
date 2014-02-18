@@ -33,9 +33,6 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:+'
-    compile files('google-play-services.jar')
     //added
-    compile 'com.android.support:appcompat-v7:+'
     compile 'com.google.android.gms:play-services:4.0.30'
-
 }

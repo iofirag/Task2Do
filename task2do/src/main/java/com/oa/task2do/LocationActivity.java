@@ -35,16 +35,12 @@ public class LocationActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        System.out.println("1111111111");
-
         setContentView(R.layout.location);
 
         //bind to layout
         mLocationIn = (EditText) findViewById(R.id.location_input);
         mLocationOut = (TextView) findViewById(R.id.location_output);
         mGeocoder = new Geocoder(this);
-
-        System.out.println("2222222222");
 
         //initialize the map object
         SupportMapFragment supportMapFragment =
@@ -73,7 +69,6 @@ public class LocationActivity extends FragmentActivity {
     private void lookUp(String addressString) {
         String out;
         try {
-            System.out.println("33333333333");
             //TODO: move geocoding to async task
             List<Address> addresses = mGeocoder.getFromLocationName(addressString, 1);
             if (addresses.size() >= 1) {
@@ -83,7 +78,6 @@ public class LocationActivity extends FragmentActivity {
                         + DF.format(address.getLatitude()) + " , "
                         + DF.format(address.getLongitude()) + ")";
                 updateMap(latLng);
-                System.out.println("444444444444");
             } else {
                 out = "Not found";
             }

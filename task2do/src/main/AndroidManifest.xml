@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.oa.task2do" >
 
+
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -25,13 +26,16 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <meta-data android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyACuC3sHUQbkDX8m4kEiOOQjoPrOR1bYjE"/>
 
-        <uses-library android:name="com.google.android.maps" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBy4eh0uaCzCpKwAKnjPttnc1GSlj0XUpE"/>
+            android:value="AIzaSyAyBdjuuyZcclMO4TSPlaz_yuxkiTSa008"/>
+        <!--android:value="
+        AIzaSyACuC3sHUQbkDX8m4kEiOOQjoPrOR1bYjE"
+        AIzaSyBy4eh0uaCzCpKwAKnjPttnc1GSlj0XUpE/>-->
+
+        <!--<uses-library android:name="com.google.android.maps" />-->
+
 
 
 

@@ -82,8 +82,6 @@ public class MainActivity extends Activity  {
     }
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showLocationDialog(View v) {
-//        DialogFragment newFragment = new LocationFragment();
-//        newFragment.show(getFragmentManager(), "location");
         Intent intent = new Intent(this, LocationActivity.class);
         startActivity(intent);
     }
@@ -92,93 +90,7 @@ public class MainActivity extends Activity  {
         DialogFragment newFragment = new VoiceFragment();
         newFragment.show(getFragmentManager(), "voice");
     }
-//    public void clickAlarmButton (View view) {
-//        // custom dialog
-//        final Dialog dialog = new Dialog(this);
-//        dialog.setContentView(R.layout.alarm);
-//
-//        // set the custom dialog components - text, image and button
-//        TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
-//        Button setButton = (Button) dialog.findViewById(R.id.alarmSetButton);
-//        Button cancelButton = (Button) dialog.findViewById(R.id.alarmCancelButton);
-//
-//        // if button is clicked, close the custom dialog
-//        setButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //save the time from timePicker object
-//                dialog.dismiss();
-//            }
-//        });
-//        cancelButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.dismiss();
-//            }
-//        });
-//        dialog.show();
-//    }
-//    public void clickDateButton (View view) {
-//        // custom dialog
-//        final Dialog dialog = new Dialog(this);
-//        dialog.setContentView(R.layout.date);
-//
-//        // set the custom dialog components - text, image and button
-//        DatePicker date = (DatePicker) findViewById(R.id.datePicker);
-//        Button setButton = (Button) dialog.findViewById(R.id.dateSetButton);
-//        Button cancelButton = (Button) dialog.findViewById(R.id.dateCancelButton);
-//
-//        // if button is clicked, close the custom dialog
-//        setButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //save the time from datePicker object
-//                dialog.dismiss();
-//            }
-//        });
-//        cancelButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.dismiss();
-//            }
-//        });
-//        dialog.show();
-//    }
- //   public void clickLocationButton (View view) {
-//        // custom dialog
-//        final Dialog dialog = new Dialog(this);
-//        dialog.setContentView(R.layout.location);
-//
-//        // set the custom dialog components - text, image and button
-//        EditText locationText = (EditText) findViewById(R.id.location_input);
-//        Button setButton = (Button) dialog.findViewById(R.id.locationSetButton);
-//        Button cancelButton = (Button) dialog.findViewById(R.id.locationCancelButton);
-//
-//        // if button is clicked, close the custom dialog
-//        setButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                //save the location text from locationText object
-//                dialog.dismiss();
-//            }
-//        });
-//        cancelButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                dialog.dismiss();
-//            }
-//        });
-//        dialog.show();
-//    }
-  //    public void clickVoiceButton (View view) {
-//        // custom dialog
-//        final Dialog dialog = new Dialog(this);
-//        dialog.setContentView(R.layout.voice);
-//        //
-//        //
-//        //
-//        dialog.show();
-//    }
+
 
 
 
