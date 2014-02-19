@@ -29,7 +29,9 @@ import java.util.Calendar;
         }
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            // Do something with the time chosen by the user
+            System.out.println("****************************************");
+            System.out.println(hourOfDay+":"+minute);
+            System.out.println("****************************************");
         }
     }
 
