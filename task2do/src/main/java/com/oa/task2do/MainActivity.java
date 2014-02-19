@@ -4,13 +4,16 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -19,7 +22,7 @@ import java.util.List;
 
 public class MainActivity extends Activity  {
 
-
+    private static final int REQUEST_CODE = 1234;
     Singleton singleton=null;
     private TaskListBaseAdapter currentList;
     private TextWatcher tw;
@@ -34,13 +37,18 @@ public class MainActivity extends Activity  {
 
         currentList = new TaskListBaseAdapter(this, singleton.getInstance(this).getArrayList());
         ListView listView = (ListView) findViewById(R.id.listView);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-                editTask(v);
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
+//                //editTask(v);
+//                //System.out.println("list view itemClick");
+//            }
+//        });
 
+
+
+
+            /* inflate bar by text change */
         tw = new TextWatcher() {
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
             public void afterTextChanged(Editable s){
@@ -61,6 +69,20 @@ public class MainActivity extends Activity  {
         et.addTextChangedListener(tw);
 
 
+        // Disable button if no recognition service is present
+        PackageManager pm = getPackageManager();
+        List<ResolveInfo> activities = pm.queryIntentActivities(
+                new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
+        if (activities.size() == 0)
+        {
+            /* disabled button */
+            ImageButton voiceButton = (ImageButton) findViewById(R.id.ibtVoice_newTask);
+            voiceButton.setEnabled(false);
+
+            /* show Toast text */
+            Toast.makeText(MainActivity.this, "Recognizer not present", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     @Override
@@ -68,6 +90,20 @@ public class MainActivity extends Activity  {
         super.onResume();
         updateListView();
         currentList.notifyDataSetChanged();
+
+//                /* try to inflate by focus change */
+//        EditText etNewTask = (EditText) findViewById(R.id.etNewTask);
+//        etNewTask.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean hasFocus) {
+//                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
+//                if(hasFocus){
+//                    linearLayout.setVisibility(LinearLayout.VISIBLE);
+//                } else {
+//                    linearLayout.setVisibility(LinearLayout.GONE);
+//                }
+//            }
+//        });
     }
 
     /* Time-Picker Dialog */
@@ -91,10 +127,24 @@ public class MainActivity extends Activity  {
     /* voice Dialog */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showVoiceDialog(View v) {
-        DialogFragment newFragment = new VoiceFragment();
-        newFragment.show(getFragmentManager(), "voice");
+//        DialogFragment newFragment = new VoiceFragment();
+//        newFragment.show(getFragmentManager(), "voice");
+        startVoiceRecognitionActivity();
+
     }
 
+
+    /**
+     * Fire an intent to start the voice recognition activity.
+     */
+    private void startVoiceRecognitionActivity()
+    {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice recognition...");
+        startActivityForResult(intent, REQUEST_CODE);
+    }
 
 
 
@@ -169,6 +219,7 @@ public class MainActivity extends Activity  {
         lv.setAdapter(currentList);
     }
 
+    /* inflate edit options bar of the task clicked */
     public void editTask (View view) {
 
         ListView listView = (ListView) findViewById(R.id.listView);
@@ -177,6 +228,13 @@ public class MainActivity extends Activity  {
         Toast.makeText(MainActivity.this, "edited item : " + " " +
                 selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
         currentList.notifyDataSetChanged();
+
+        //LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listViewExtraOptions);
+        /*
+        if (linearLayout.getVisibility()==View.GONE)
+            linearLayout.setVisibility(View.VISIBLE);
+        else
+            linearLayout.setVisibility(View.GONE); */
     }
 
     public void done(View view) {
