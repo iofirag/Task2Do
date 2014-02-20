@@ -11,7 +11,7 @@ public class Task {
     private String _taskMessage ;
     private Time _time;
     private Date _date;
-    private myLocation _location;
+    public myLocation _location;
 
 
 

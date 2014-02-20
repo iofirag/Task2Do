@@ -11,9 +11,11 @@ import android.speech.RecognizerIntent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -21,20 +23,27 @@ import java.util.List;
 
 public class MainActivity extends Activity  {
 
-    private static final int RESULT_SPEECH = 1230;
-    private static final int RESULT_MAP = 1231;
+    private static final int RESULT_TIME = 1231;
+    private static final int RESULT_DATE = 1232;
+    private static final int RESULT_MAP = 1233;
+    private static final int RESULT_SPEECH = 1234;
+
     Singleton singleton=null;
     private TaskListBaseAdapter currentList;
     private TextWatcher tw;
-    private Task newTask;
+
+    private TimePicker timePicker;
+    private DatePicker datePicker;
+    private double longitude=0;
+    private double latitude=0;
+
+
+    //private Task newTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // initialize a task
-        newTask= new Task();
 
         if (singleton.getInstance(this).getArrayList().isEmpty())
             restoreFromDb();
@@ -172,16 +181,31 @@ public class MainActivity extends Activity  {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
+            case RESULT_TIME: {
+                if (resultCode == RESULT_OK ) {
+                    // Receive Time parameters from TimePickerFragments
+
+                }
+                break;
+            }
+            case RESULT_DATE: {
+                if (resultCode == RESULT_OK ) {
+                    // Receive Date parameters from DatePickerFragments
+
+                }
+                break;
+            }
             case RESULT_MAP: {
                 if (resultCode == RESULT_OK ) {
-                    //Receive 2 parameters from MAP activity
-                    newTask.get_location().setLongitude(  data.getDoubleExtra("longitude", 0)    );
-                    newTask.get_location().setLatitude(  data.getDoubleExtra("latitude", 0)    );
+                    // Receive 2 parameters from MAP activity
+                    longitude= data.getDoubleExtra("longitude", 0);
+                    latitude= data.getDoubleExtra("latitude", 0);
                 }
                 break;
             }
             case RESULT_SPEECH: {
                 if (resultCode == RESULT_OK && data != null) {
+                    // Receive String from Speach recognition
                     ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     EditText editText_newTask = (EditText) findViewById(R.id.etNewTask);
                     editText_newTask.setText(text.get(0));

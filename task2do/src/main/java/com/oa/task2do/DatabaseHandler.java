@@ -88,8 +88,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_DATE_DAY, task.get_date().getDay());
         values.put(KEY_TIME_HOUR, task.get_date().getHours());
         values.put(KEY_TIME_MINUTES, task.get_date().getMinutes());
-        values.put(KEY_LOCATION_LONGITUDE, task.get_location().getLongtitude());
-        values.put(KEY_LOCATION_LATITUDE, task.get_location().getLatitude());
+        //values.put(KEY_LOCATION_LONGITUDE, task.get_location().getLongitude());
+        //values.put(KEY_LOCATION_LATITUDE, task.get_location().getLatitude());
 
         // Inserting Row
         db.insert(TABLE_TASKS, null, values );

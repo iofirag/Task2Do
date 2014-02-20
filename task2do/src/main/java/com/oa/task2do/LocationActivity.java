@@ -33,8 +33,8 @@ public class LocationActivity extends FragmentActivity {
     private GoogleMap mGoogleMap = null;
     private Marker marker = null;
 
-    private double longitude =0;
-    private double latitude =0;
+    private double longitude =0.;
+    private double latitude =0.;
 
 
     @Override

@@ -13,11 +13,13 @@ public class myLocation {
         this.latitude = latitude;
         this.longitude = longtitude;
     }
+    public myLocation() {
+    }
 
     public Double getLatitude() {
         return latitude;
     }
-    public Double getLongtitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
