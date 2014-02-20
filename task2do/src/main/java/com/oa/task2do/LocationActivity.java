@@ -1,10 +1,12 @@
 package com.oa.task2do;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -30,6 +32,10 @@ public class LocationActivity extends FragmentActivity {
     private Geocoder mGeocoder;
     private GoogleMap mGoogleMap = null;
     private Marker marker = null;
+
+    private double longitude =0;
+    private double latitude =0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,8 @@ public class LocationActivity extends FragmentActivity {
                 return false;
             }
         });
+
+
     }
 
     /**
@@ -78,6 +86,8 @@ public class LocationActivity extends FragmentActivity {
                         + DF.format(address.getLatitude()) + " , "
                         + DF.format(address.getLongitude()) + ")";
                 updateMap(latLng);
+                longitude = address.getLongitude();
+                latitude = address.getLatitude();
             } else {
                 out = "Not found";
             }
@@ -109,5 +119,19 @@ public class LocationActivity extends FragmentActivity {
                 .build();
         mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPosition));
         System.out.println("update-map-seccessfully");
+    }
+
+
+    public void locationSetButton (View v){
+        Intent data = new Intent();
+        //---set the data to pass back---
+        data.putExtra("longitude", longitude);
+        data.putExtra("latitude", latitude);
+        setResult(RESULT_OK, data);
+        //---closes the activity---
+        finish();
+    }
+    public void locationCancelButton (View v){
+        finish();
     }
 }

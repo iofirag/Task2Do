@@ -1,5 +1,6 @@
 package com.oa.task2do;
 
+import java.sql.Time;
 import java.util.Date;
 
 /**
@@ -8,21 +9,62 @@ import java.util.Date;
 public class Task {
     int _id;
     private String _taskMessage ;
+    private Time _time;
     private Date _date;
+    private myLocation _location;
+
+
+
+    public int get_id() {
+        return _id;
+    }
+    public void set_id(int _id) {
+        this._id = _id;
+    }
+
+    public Time get_time() {
+        return _time;
+    }
+    public void set_time(Time _time) {
+        this._time = _time;
+    }
+
+    public String get_taskMessage() {
+        return _taskMessage;
+    }
+    public void set_taskMessage(String _taskMessage) {
+        this._taskMessage = _taskMessage;
+    }
+
+    public myLocation get_location() {
+
+        return _location;
+    }
+    public void set_location(myLocation _location) {
+        this._location = _location;
+    }
+
+
 
     /*-----------Ctor---------------------------*/
+    public Task(int id, String str, Time time, Date date, Double longtitude , Double latitude) {
+        this._id = id;
+        this._taskMessage = str;
+        this._time = time;
+        this._date = date;
+        this._location.setLongitude(longtitude);
+        this._location.setLatitude(latitude);
+    }
     public Task(int id, String str, Date date) {
         this._id = id;
         this._taskMessage = str;
         this._date = date;
     }
-
     public Task(int id, String str) {
         this._id = id;
         this._taskMessage = str;
         this._date= new Date();
     }
-
     public Task(String str, Date date) {
         this._taskMessage = str;
         this._date = date;
@@ -31,7 +73,6 @@ public class Task {
         this._id = _id;
         this._date= new Date();
     }
-
     public Task() {
     }
     /*-------------------------------------------*/

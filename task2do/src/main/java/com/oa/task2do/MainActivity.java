@@ -3,9 +3,8 @@ package com.oa.task2do;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -13,30 +12,35 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends Activity  {
 
-    private static final int REQUEST_CODE = 1234;
+    private static final int RESULT_SPEECH = 1230;
+    private static final int RESULT_MAP = 1231;
     Singleton singleton=null;
     private TaskListBaseAdapter currentList;
     private TextWatcher tw;
+    private Task newTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // initialize a task
+        newTask= new Task();
+
         if (singleton.getInstance(this).getArrayList().isEmpty())
             restoreFromDb();
 
         currentList = new TaskListBaseAdapter(this, singleton.getInstance(this).getArrayList());
-        ListView listView = (ListView) findViewById(R.id.listView);
+//        ListView listView = (ListView) findViewById(R.id.listView);
 //        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
@@ -48,7 +52,7 @@ public class MainActivity extends Activity  {
 
 
 
-            /* inflate bar by text change */
+        /* inflate bar by text change */
         tw = new TextWatcher() {
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
             public void afterTextChanged(Editable s){
@@ -68,21 +72,6 @@ public class MainActivity extends Activity  {
         EditText et = (EditText) findViewById(R.id.etNewTask);
         et.addTextChangedListener(tw);
 
-
-        // Disable button if no recognition service is present
-        PackageManager pm = getPackageManager();
-        List<ResolveInfo> activities = pm.queryIntentActivities(
-                new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH), 0);
-        if (activities.size() == 0)
-        {
-            /* disabled button */
-            ImageButton voiceButton = (ImageButton) findViewById(R.id.ibtVoice_newTask);
-            voiceButton.setEnabled(false);
-
-            /* show Toast text */
-            Toast.makeText(MainActivity.this, "Recognizer not present", Toast.LENGTH_LONG).show();
-        }
-
     }
 
     @Override
@@ -91,7 +80,7 @@ public class MainActivity extends Activity  {
         updateListView();
         currentList.notifyDataSetChanged();
 
-//                /* try to inflate by focus change */
+//        /* try to inflate by focus change */
 //        EditText etNewTask = (EditText) findViewById(R.id.etNewTask);
 //        etNewTask.setOnFocusChangeListener(new View.OnFocusChangeListener() {
 //            @Override
@@ -122,38 +111,51 @@ public class MainActivity extends Activity  {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showLocationDialog(View v) {
         Intent intent = new Intent(this, LocationActivity.class);
-        startActivity(intent);
+        try {
+            startActivityForResult(intent, RESULT_MAP);
+        } catch (ActivityNotFoundException a) {
+            Toast t = Toast.makeText(getApplicationContext(),
+                    "Opps! Your device doesn't support Google-Maps",
+                    Toast.LENGTH_SHORT);
+            t.show();
+        }
     }
     /* voice Dialog */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showVoiceDialog(View v) {
 //        DialogFragment newFragment = new VoiceFragment();
 //        newFragment.show(getFragmentManager(), "voice");
-        startVoiceRecognitionActivity();
-
-    }
-
-
-    /**
-     * Fire an intent to start the voice recognition activity.
-     */
-    private void startVoiceRecognitionActivity()
-    {
+        /**
+         * Fire an intent to start the voice recognition activity.
+         */
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Voice recognition...");
-        startActivityForResult(intent, REQUEST_CODE);
+        try {
+            startActivityForResult(intent, RESULT_SPEECH);
+            EditText et = (EditText) findViewById(R.id.etNewTask);
+            et.setText("");
+        } catch (ActivityNotFoundException a) {
+            Toast t = Toast.makeText(getApplicationContext(),
+                    "Opps! Your device doesn't support Speech to Text",
+                    Toast.LENGTH_SHORT);
+            t.show();
+        }
     }
 
 
 
-//    void inflateTab(){
-//        LinearLayout functionsTab = (LinearLayout) findViewById(R.id.functionsTab);
-//        if (functionsTab.getVisibility()==View.GONE)
-//            functionsTab.setVisibility(View.VISIBLE);
-//        else functionsTab.setVisibility(View.GONE);
-//    }
+/*    public void showExtraOptions(View view, boolean hasFocus)
+    {
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
+        if (hasFocus){
+            linearLayout.setVisibility(LinearLayout.VISIBLE);
+        }
+        else{
+            linearLayout.setVisibility(LinearLayout.GONE);
+        }
+    }*/
 
 
 //    @Override
@@ -163,6 +165,32 @@ public class MainActivity extends Activity  {
 //        getMenuInflater().inflate(R.menu.main, menu);
 //        return true;
 //    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case RESULT_MAP: {
+                if (resultCode == RESULT_OK ) {
+                    //Receive 2 parameters from MAP activity
+                    newTask.get_location().setLongitude(  data.getDoubleExtra("longitude", 0)    );
+                    newTask.get_location().setLatitude(  data.getDoubleExtra("latitude", 0)    );
+                }
+                break;
+            }
+            case RESULT_SPEECH: {
+                if (resultCode == RESULT_OK && data != null) {
+                    ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    EditText editText_newTask = (EditText) findViewById(R.id.etNewTask);
+                    editText_newTask.setText(text.get(0));
+                }
+                break;
+            }
+
+        }
+    }
 
 //    @Override
 //    public boolean onOptionsItemSelected(MenuItem item) {
@@ -193,16 +221,7 @@ public class MainActivity extends Activity  {
 //    }
 
 
-    public void showExtraOptions(View view,boolean hasFocus)
-    {
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listViewExtraOptions);
-        if (hasFocus){
-            linearLayout.setVisibility(LinearLayout.VISIBLE);
-        }
-        else{
-            linearLayout.setVisibility(LinearLayout.GONE);
-        }
-    }
+
 
     public void restoreFromDb(){
         List<Task> list = singleton.getInstance(this).getDb().getAllTasks();

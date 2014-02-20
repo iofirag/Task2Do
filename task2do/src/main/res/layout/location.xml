@@ -46,7 +46,8 @@
             android:layout_alignStart="@+id/timePicker"
             android:layout_alignRight="@+id/timePicker"
             android:layout_alignEnd="@+id/timePicker"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.5"
+            android:onClick="locationCancelButton" />
 
         <Button
             style="?android:attr/buttonStyleSmall"
@@ -59,7 +60,8 @@
             android:layout_alignEnd="@+id/timePicker"
             android:layout_alignLeft="@+id/locationCancelButton"
             android:layout_alignStart="@+id/locationCancelButton"
-            android:layout_weight="0.5" />
+            android:layout_weight="0.5"
+            android:onClick="locationSetButton" />
     </LinearLayout>
 
 </LinearLayout>
