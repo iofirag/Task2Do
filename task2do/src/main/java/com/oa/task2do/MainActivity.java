@@ -20,7 +20,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
-public class MainActivity extends Activity  {
+public class MainActivity extends Activity {
+
+
 
     private static final int REQUEST_CODE = 1234;
     Singleton singleton=null;
@@ -111,12 +113,14 @@ public class MainActivity extends Activity  {
     public void showTimePickerDialog(View v) {
         DialogFragment newFragment = new TimePickerFragment();
         newFragment.show(getFragmentManager(), "timePicker");
+
     }
     /* Date-Picker Dialog */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getFragmentManager(), "datePicker");
+
     }
     /* Location Activity */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -287,4 +291,19 @@ public class MainActivity extends Activity  {
     public void saveToDb(Task newTask){
         singleton.getInstance(this).getDb().addTask(newTask);
     }
+
+    public static void getTimeFromDialogFregment () {
+        System.out.println("*********************************************************");
+        System.out.println(TimePickerFragment.mhour+":"+TimePickerFragment.msecond);
+        System.out.println("*********************************************************");
+        TimePickerFragment.mhour = TimePickerFragment.msecond =0;
+    }
+    public static void getDateFromDialogFregment () {
+        System.out.println("*********************************************************");
+        System.out.println(DatePickerFragment.mday+":"+DatePickerFragment.mmonth+":"+DatePickerFragment.myear);
+        System.out.println("*********************************************************");
+        DatePickerFragment.mday = DatePickerFragment.mmonth = DatePickerFragment.myear =0;
+    }
+
+
 }

@@ -3,6 +3,7 @@ package com.oa.task2do;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
@@ -13,7 +14,9 @@ import java.util.Calendar;
  */
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
-
+    public static int myear;
+    public static int mmonth;
+    public static int mday;
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the current date as the default date in the picker
@@ -27,7 +30,16 @@ public class DatePickerFragment extends DialogFragment
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        System.out.println("****************************************");
-        System.out.println(day+":"+month+1+":"+year);
-        System.out.println("****************************************");    }
+        mday = day;
+        myear=year;
+        mmonth=month+1;
+    }
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        System.out.println("Date dismiss");
+        MainActivity.getDateFromDialogFregment();
+        this.dismiss();
+    }
+
+
 }
