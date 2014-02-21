@@ -1,30 +1,26 @@
 package com.oa.task2do;
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends Activity  {
+public class MainActivity extends FragmentActivity implements DialogListener {
 
-    private static final int RESULT_TIME = 1231;
-    private static final int RESULT_DATE = 1232;
     private static final int RESULT_MAP = 1233;
     private static final int RESULT_SPEECH = 1234;
 
@@ -32,12 +28,18 @@ public class MainActivity extends Activity  {
     private TaskListBaseAdapter currentList;
     private TextWatcher tw;
 
-    private TimePicker timePicker;
-    private DatePicker datePicker;
-    private double longitude=0;
-    private double latitude=0;
+    private double mapLongitude= -1;
+    private double mapLatitude= -1;
 
+    private int timeHour = -1;
+    private int timeMinute= -1;
 
+    private int dateYear= -1;
+    private int dateMonth= -1;
+    private int dateDay= -1;
+
+//    private TimePicker timePicker;
+//    private DatePicker datePicker;
     //private Task newTask;
 
     @Override
@@ -104,6 +106,11 @@ public class MainActivity extends Activity  {
 //        });
     }
 
+
+    /**
+     *
+     * All types of Dialogs
+     */
     /* Time-Picker Dialog */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showTimePickerDialog(View v) {
@@ -176,30 +183,38 @@ public class MainActivity extends Activity  {
 //    }
 
 
+    /**
+     *
+     * Returning data from FragmentDialogs
+     * (Time dialog)
+     * (Date dialog)
+     */
+    @Override
+    public void onFinishEditDialog(Intent data) {
+        /* For TimePicker Fragment */
+        if (data.getExtras().containsKey("hour"))
+            timeHour = data.getExtras().getInt("hour");
+        if (data.getExtras().containsKey("minute"))
+            timeMinute = data.getExtras().getInt("minute");
+
+        /* For DatePicker Fragment */
+        if (data.getExtras().containsKey("year"))
+            dateYear = data.getExtras().getInt("year");
+        if (data.getExtras().containsKey("month"))
+            dateMonth = data.getExtras().getInt("month");
+        if (data.getExtras().containsKey("day"))
+            dateDay = data.getExtras().getInt("day");
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
-            case RESULT_TIME: {
-                if (resultCode == RESULT_OK ) {
-                    // Receive Time parameters from TimePickerFragments
-
-                }
-                break;
-            }
-            case RESULT_DATE: {
-                if (resultCode == RESULT_OK ) {
-                    // Receive Date parameters from DatePickerFragments
-
-                }
-                break;
-            }
             case RESULT_MAP: {
                 if (resultCode == RESULT_OK ) {
                     // Receive 2 parameters from MAP activity
-                    longitude= data.getDoubleExtra("longitude", 0);
-                    latitude= data.getDoubleExtra("latitude", 0);
+                    mapLongitude= data.getDoubleExtra("longitude", 0);
+                    mapLatitude= data.getDoubleExtra("latitude", 0);
                 }
                 break;
             }
@@ -303,27 +318,38 @@ public class MainActivity extends Activity  {
         EditText description = (EditText) findViewById(R.id.etNewTask);
         if (!description.getText().toString().isEmpty()){
 
-            //TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
-            //DatePicker datePicker = (DatePicker) findViewById(R.id.datePicker);
-            //Date date= new Date(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour() , timePicker.getCurrentMinute() );
+//            TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
+//            DatePicker datePicker = (DatePicker) findViewById(R.id.datePicker);
+//            Date date= new Date(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour() , timePicker.getCurrentMinute() );
+//
+//
+//            mapLongitude
+//            mapLatitude
+//
+//            timeHour
+//            timeMinute
+//
+//            dateYear
+//            dateMonth
+//            dateDay
 
+            // Create ID fot the Task from currentTimeMillis
             int nowUseAsId = (int) (long) System.currentTimeMillis();
             if (nowUseAsId<0) nowUseAsId*=-1;
 
-            //System.out.println("nowUseAsId="+nowUseAsId);
-
             String taskMessage = description.getText().toString();
-            Task task = new Task(nowUseAsId, taskMessage);
+//            System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
+            Task task = new Task(nowUseAsId, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
 
             singleton.getInstance(this).getArrayList().add(0, task);
 
             //-----continue checking from here -> to register date & cancel alarmManager after if click done
             saveToDb(task);
 
+            // initialize EditText ob
             description.setText("");
-            updateListView();
 
-            //finish();
+            updateListView();
         }
     }
 

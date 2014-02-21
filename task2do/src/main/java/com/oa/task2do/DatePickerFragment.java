@@ -3,6 +3,7 @@ package com.oa.task2do;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
@@ -31,12 +32,15 @@ public class DatePickerFragment extends DialogFragment
         System.out.println(day+":"+month+1+":"+year);
         System.out.println("****************************************");
 
-        //Intent data = new Intent();
+        // Return input text to activity
+        Intent data = new Intent();
         //---set the data to pass back---
-        //data.putExtra("datePicker", datePicker);
-        //setResult(RESULT_OK, data);
+        data.putExtra("year", year);
+        data.putExtra("month", month);
+        data.putExtra("day", day);
+        DialogListener activity = (DialogListener) getActivity();
+        activity.onFinishEditDialog(data);
         //---closes the activity---
-        //finish();
-
+        this.dismiss();
     }
 }

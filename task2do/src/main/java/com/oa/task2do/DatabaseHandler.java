@@ -82,14 +82,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         /*
          * save task Message, Date(year+month+day), Time(Hour+Time), Location(Longitude+Latitude)
          * */
-        values.put(KEY_MESSAGE, task.getTaskMessage());
-        values.put(KEY_DATE_YEAR, task.get_date().getYear());
-        values.put(KEY_DATE_MONTH, task.get_date().getMonth());
-        values.put(KEY_DATE_DAY, task.get_date().getDay());
-        values.put(KEY_TIME_HOUR, task.get_date().getHours());
-        values.put(KEY_TIME_MINUTES, task.get_date().getMinutes());
-        //values.put(KEY_LOCATION_LONGITUDE, task.get_location().getLongitude());
-        //values.put(KEY_LOCATION_LATITUDE, task.get_location().getLatitude());
+        values.put(KEY_MESSAGE, task._taskMessage);
+        values.put(KEY_DATE_YEAR, task._dateYear);
+        values.put(KEY_DATE_MONTH, task._dateMonth);
+        values.put(KEY_DATE_DAY, task._dateDay);
+        values.put(KEY_TIME_HOUR, task._timeHour);
+        values.put(KEY_TIME_MINUTES, task._timeMinute);
+        values.put(KEY_LOCATION_LONGITUDE, task._mapLongitude);
+        values.put(KEY_LOCATION_LATITUDE, task._mapLatitude);
 
         // Inserting Row
         db.insert(TABLE_TASKS, null, values );
@@ -97,21 +97,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    // Getting single task
-    Task getTask(int id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursor = db.query(TABLE_TASKS, new String[] { KEY_ID,
-                KEY_MESSAGE }, KEY_ID + "=?",
-                new String[] { String.valueOf(id) }, null, null, null, null);
-        if (cursor != null)
-            cursor.moveToFirst();
-
-        Task task = new Task(Integer.parseInt(cursor.getString(0)),
-                cursor.getString(1) );
-        // return contact
-        return task;
-    }
+//    // Getting single task
+//    Task getTask(int id) {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//
+//        Cursor cursor = db.query(TABLE_TASKS, new String[] { KEY_ID,
+//                KEY_MESSAGE }, KEY_ID + "=?",
+//                new String[] { String.valueOf(id) }, null, null, null, null);
+//        if (cursor != null)
+//            cursor.moveToFirst();
+//
+//        Task task = new Task(Integer.parseInt(cursor.getString(0)),
+//                cursor.getString(1) );
+//        // return contact
+//        return task;
+//    }
 
 
     // Getting All Tasks

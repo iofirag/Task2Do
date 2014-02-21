@@ -1,18 +1,34 @@
 package com.oa.task2do;
 
-import java.sql.Time;
-import java.util.Date;
-
 /**
  * Created by joe on 25/10/13.
  */
 public class Task {
     int _id;
-    private String _taskMessage ;
-    private Time _time;
-    private Date _date;
-    public myLocation _location;
+    public String _taskMessage ;
+    public int _dateYear;
+    public int _dateMonth;
+    public int _dateDay;
+    public int _timeHour;
+    public int _timeMinute;
+    public double _mapLongitude;
+    public double _mapLatitude;
 
+
+    public Task(int id, String taskMessage, int dateYear, int dateMonth, int dateDay, int timeHour, int timeMinute, double mapLongitude, double mapLatitude) {
+        this._id=id;
+        this._taskMessage=taskMessage;
+
+        this._dateYear= dateYear;
+        this._dateMonth=dateMonth;
+        this._dateDay=dateDay;
+
+        this._timeHour=timeHour;
+        this._timeMinute=timeMinute;
+
+        this._mapLongitude=mapLongitude;
+        this._mapLatitude=mapLatitude;
+    }
 
 
     public int get_id() {
@@ -22,57 +38,6 @@ public class Task {
         this._id = _id;
     }
 
-    public Time get_time() {
-        return _time;
-    }
-    public void set_time(Time _time) {
-        this._time = _time;
-    }
-
-    public String get_taskMessage() {
-        return _taskMessage;
-    }
-    public void set_taskMessage(String _taskMessage) {
-        this._taskMessage = _taskMessage;
-    }
-
-    public myLocation get_location() {
-
-        return _location;
-    }
-    public void set_location(myLocation _location) {
-        this._location = _location;
-    }
-
-
-
-    /*-----------Ctor---------------------------*/
-    public Task(int id, String str, Time time, Date date, Double longtitude , Double latitude) {
-        this._id = id;
-        this._taskMessage = str;
-        this._time = time;
-        this._date = date;
-        this._location.setLongitude(longtitude);
-        this._location.setLatitude(latitude);
-    }
-    public Task(int id, String str, Date date) {
-        this._id = id;
-        this._taskMessage = str;
-        this._date = date;
-    }
-    public Task(int id, String str) {
-        this._id = id;
-        this._taskMessage = str;
-        this._date= new Date();
-    }
-    public Task(String str, Date date) {
-        this._taskMessage = str;
-        this._date = date;
-    }
-    public Task(int _id) {
-        this._id = _id;
-        this._date= new Date();
-    }
     public Task() {
     }
     /*-------------------------------------------*/
@@ -94,12 +59,12 @@ public class Task {
     }
 
     // set/get Date
-    public Date get_date() {
-        return _date;
-    }
-    public void set_date(Date _date) {
-        this._date = _date;
-    }
+//    public Date get_date() {
+//        return _date;
+//    }
+//    public void set_date(Date _date) {
+//        this._date = _date;
+//    }
 
     @Override
     public String toString (){
