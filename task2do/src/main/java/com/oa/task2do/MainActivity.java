@@ -108,7 +108,6 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
 
     /**
-     *
      * All types of Dialogs
      */
     /* Time-Picker Dialog */
@@ -338,8 +337,9 @@ public class MainActivity extends FragmentActivity implements DialogListener {
             if (nowUseAsId<0) nowUseAsId*=-1;
 
             String taskMessage = description.getText().toString();
-//            System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
+            System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
             Task task = new Task(nowUseAsId, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
+
 
             singleton.getInstance(this).getArrayList().add(0, task);
 
@@ -348,6 +348,16 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
             // initialize EditText ob
             description.setText("");
+
+            /* initialize variables */
+            mapLongitude= -1;
+            mapLatitude= -1;
+            timeHour= -1;
+            timeMinute= -1;
+            dateYear= -1;
+            dateMonth= -1;
+            dateDay= -1;
+            /* end initialize variables */
 
             updateListView();
         }
