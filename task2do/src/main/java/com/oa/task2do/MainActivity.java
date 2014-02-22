@@ -314,30 +314,32 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
 
     public void saveTask(View view){
+        /* only if user put text for the task - we continue to save it */
         EditText description = (EditText) findViewById(R.id.etNewTask);
         if (!description.getText().toString().isEmpty()){
 
-//            TimePicker timePicker = (TimePicker) findViewById(R.id.timePicker);
-//            DatePicker datePicker = (DatePicker) findViewById(R.id.datePicker);
-//            Date date= new Date(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth(), timePicker.getCurrentHour() , timePicker.getCurrentMinute() );
-//
-//
+            /* Create ID for the Task by get currentTimeMillis of this moment */
+            int nowUseAsId = (int) (long) System.currentTimeMillis();
+            if (nowUseAsId<0) nowUseAsId*=-1;
+
+            /* Text Message */
+            String taskMessage = description.getText().toString();
+
+            /* GPS details */
 //            mapLongitude
 //            mapLatitude
 //
+            /* Time details */
 //            timeHour
 //            timeMinute
 //
+            /* Date details */
 //            dateYear
 //            dateMonth
 //            dateDay
 
-            // Create ID fot the Task from currentTimeMillis
-            int nowUseAsId = (int) (long) System.currentTimeMillis();
-            if (nowUseAsId<0) nowUseAsId*=-1;
 
-            String taskMessage = description.getText().toString();
-            System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
+            //System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
             Task task = new Task(nowUseAsId, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
 
 
@@ -345,6 +347,9 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
             //-----continue checking from here -> to register date & cancel alarmManager after if click done
             saveToDb(task);
+            //create alarm from DATE+Time+ID details
+            // using alarmManager
+
 
             // initialize EditText ob
             description.setText("");
