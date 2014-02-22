@@ -13,7 +13,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="309dp"
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/taskText"
             android:lines="1"
@@ -23,7 +23,8 @@
             android:onClick="editTask"
             android:focusableInTouchMode="false"
             android:focusable="false"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:layout_weight="0.98" />
 
         <Button
             android:layout_width="wrap_content"
@@ -36,7 +37,8 @@
             android:lines="1"
             android:layout_toRightOf="@+id/taskText"
             android:onClick="done"
-            android:clickable="true" />
+            android:clickable="true"
+            android:layout_weight="0.05" />
     </LinearLayout>
 
 
