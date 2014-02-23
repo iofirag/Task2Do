@@ -289,7 +289,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 //            linearLayout.setVisibility(LinearLayout.GONE);
 //            extras= true;
 //        }
-//        currentList.notifyDataSetChanged();
+        currentList.notifyDataSetChanged();
     }
 
     public void done(View view) {
