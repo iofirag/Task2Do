@@ -5,6 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class LocationActivity extends FragmentActivity {
 
@@ -33,15 +35,21 @@ public class LocationActivity extends FragmentActivity {
     private GoogleMap mGoogleMap = null;
     private Marker marker = null;
 
-    private double longitude =0.;
-    private double latitude =0.;
+    private double longitude =-1.;
+    private double latitude =-1.;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.location);
+
+        try{
+                latitude = getIntent().getExtras().getDouble("mapLatitude");
+                longitude = getIntent().getExtras().getDouble("mapLongitude");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         //bind to layout
         mLocationIn = (EditText) findViewById(R.id.location_input);
@@ -68,7 +76,46 @@ public class LocationActivity extends FragmentActivity {
             }
         });
 
+        showLocationIfExist();
+    }
 
+    public void showLocationIfExist(){
+        if (latitude!= -1. && longitude!= -1. ){
+            EditText etLocationInput = (EditText) findViewById(R.id.location_input);
+
+            //get address from longitude & latitude
+            String address = getCompleteAddressString(latitude, longitude);
+
+            //update location input
+            etLocationInput.setText(address);
+
+            // update whole map
+            lookUp(address);
+        }
+    }
+
+    private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
+        String strAdd = "";
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            if (addresses != null) {
+                Address returnedAddress = addresses.get(0);
+                StringBuilder strReturnedAddress = new StringBuilder("");
+
+                for (int i = 0; i < returnedAddress.getMaxAddressLineIndex(); i++) {
+                    strReturnedAddress.append(returnedAddress.getAddressLine(i)).append("\n");
+                }
+                strAdd = strReturnedAddress.toString();
+                Log.w("My Current loction address", "" + strReturnedAddress.toString());
+            } else {
+                Log.w("My Current loction address", "No Address returned!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.w("My Current loction address", "Canont get Address!");
+        }
+        return strAdd;
     }
 
     /**

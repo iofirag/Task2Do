@@ -25,6 +25,7 @@ import java.util.List;
 
 public class MainActivity extends FragmentActivity implements DialogListener {
 
+    private static final int EDIT_TASK = 1232;
     private static final int RESULT_MAP = 1233;
     private static final int RESULT_SPEECH = 1234;
 
@@ -47,6 +48,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     private static final int PERIOD = 2000;
 
     private boolean extras = true;
+    private boolean editTaskBoolean = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +56,11 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         setContentView(R.layout.activity_main);
 
         /* avoid keyboard show automatic */
-        ListView lv = (ListView) findViewById(R.id.listView);
+        ListView listView = (ListView) findViewById(R.id.listView);
         //close keyboard and set focusable false to etNetTask
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(lv.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
 
         /* If there is Tasks in the DataBase restore them */
         if (singleton.getInstance(this).getArrayList().isEmpty())
@@ -73,8 +75,9 @@ public class MainActivity extends FragmentActivity implements DialogListener {
             public void onClick(View v) {
                 if (((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).isActive()) {
                     LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
-                    if (linearLayout.getVisibility()== View.VISIBLE )
+                    if (linearLayout.getVisibility()== View.VISIBLE ){
                         linearLayout.setVisibility(LinearLayout.GONE);
+                    }
                     else linearLayout.setVisibility(LinearLayout.VISIBLE);
                 }
             }
@@ -100,16 +103,6 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         };
         EditText et = (EditText) findViewById(R.id.etNewTask);
         et.addTextChangedListener(tw);
-
-
-//        //try to inflate list view with listeners
-//        ListView ls = (ListView) findViewById(R.id.listView);
-//        ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//            }
-//        });
     }
 
 
@@ -150,18 +143,43 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showTimePickerDialog(View v) {
         DialogFragment newFragment = new TimePickerFragment();
+
+        // add details if user want to edit exist task
+        if (timeHour != -1 && timeMinute != -1){
+            Bundle dataBundle = new Bundle();
+            dataBundle.putInt("timeHour", timeHour);
+            dataBundle.putInt("timeMinute", timeMinute);
+            newFragment.setArguments(dataBundle);
+        }
         newFragment.show(getFragmentManager(), "timePicker");
     }
     /* Date-Picker Dialog */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showDatePickerDialog(View v) {
         DialogFragment newFragment = new DatePickerFragment();
+
+        // add details if user want to edit exist task
+        if (dateYear != -1 && dateMonth != -1 && dateDay != -1){
+            Bundle dataBundle = new Bundle();
+            dataBundle.putInt("dateYear", dateYear);
+            dataBundle.putInt("dateMonth", dateMonth);
+            dataBundle.putInt("dateDay", dateDay);
+            newFragment.setArguments(dataBundle);
+            System.out.println("save bundle----------"+dateDay+"."+dateMonth+"."+dateYear);
+        }
         newFragment.show(getFragmentManager(), "datePicker");
     }
     /* Location Activity */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showLocationDialog(View v) {
         Intent intent = new Intent(this, LocationActivity.class);
+
+        // add details if user want to edit task
+        if (mapLatitude != -1 && mapLongitude != -1){
+            intent.putExtra("mapLatitude", mapLatitude);
+            intent.putExtra("mapLongitude", mapLongitude);
+        }
+
         try {
             startActivityForResult(intent, RESULT_MAP);
         } catch (ActivityNotFoundException a) {
@@ -174,11 +192,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     /* voice Dialog */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showVoiceDialog(View v) {
-//        DialogFragment newFragment = new VoiceFragment();
-//        newFragment.show(getFragmentManager(), "voice");
-        /**
-         * Fire an intent to start the voice recognition activity.
-         */
+        /* Fire an intent to start the voice recognition activity. */
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -222,6 +236,15 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         super.onActivityResult(requestCode, resultCode, data);
 
         switch (requestCode) {
+            case EDIT_TASK: {
+                if (resultCode == EDIT_TASK) {
+                    // Receive String from Speach recognition
+                    ArrayList<String> text = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    EditText editText_newTask = (EditText) findViewById(R.id.etNewTask);
+                    editText_newTask.setText(text.get(0));
+                }
+                break;
+            }
             case RESULT_MAP: {
                 if (resultCode == RESULT_OK ) {
                     // Receive 2 parameters from MAP activity
@@ -258,7 +281,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         lv.setAdapter(currentList);
     }
 
-    /* inflate edit options bar of the task clicked */
+    /* place all the details from the task in upper EditText and local variables that will send by intent to dialogs */
     public void editTask (View view) {
 
         /* close the upper bar */
@@ -270,26 +293,30 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         ListView listView = (ListView) findViewById(R.id.listView);
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
-        //makeText(MainActivity.this, "edited item : " + " " +
-                //selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
 
+        /* load all variables from task (if have) to local variables (use in dialogs) */
+        // Message
+        EditText message = (EditText) findViewById(R.id.etNewTask);
+        message.setText( selectedTask._taskMessage );
+        // Location
+        mapLongitude = selectedTask._mapLongitude;
+        mapLatitude = selectedTask._mapLatitude;
+        // Date
+        dateYear = selectedTask._dateYear;
+        dateMonth = selectedTask._dateMonth;
+        dateDay = selectedTask._dateDay;
+        // Time
+        timeHour = selectedTask._timeHour;
+        timeMinute = selectedTask._timeMinute;
 
         /* close keyboard and set focusable false to etNetTask */
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
 
-//        //try to inflate the chosen tab
-//        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listViewExtraOptions);
-//        if(extras) {
-//            linearLayout.setVisibility(LinearLayout.VISIBLE);
-//            extras= false;
-//        }
-//        else {
-//            linearLayout.setVisibility(LinearLayout.GONE);
-//            extras= true;
-//        }
-//        currentList.notifyDataSetChanged();
+        editTaskBoolean=true;
+
+        currentList.notifyDataSetChanged();
     }
 
     public void done(View view) {
@@ -316,54 +343,55 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         EditText description = (EditText) findViewById(R.id.etNewTask);
         if (!description.getText().toString().isEmpty()){
 
-            /* Create ID for the Task by get currentTimeMillis of this moment */
-            int nowUseAsId = (int) (long) System.currentTimeMillis();
-            if (nowUseAsId<0) nowUseAsId*=-1;
+            if (editTaskBoolean==false){
+            /* not in edit mode */
+                /* Create ID for the Task by get currentTimeMillis of this moment */
+                int nowUseAsId = (int) (long) System.currentTimeMillis();
+                if (nowUseAsId<0) nowUseAsId*=-1;
 
-            /* Text Message */
-            String taskMessage = description.getText().toString();
+                /* Text Message */
+                String taskMessage = description.getText().toString();
 
-            /* GPS details */
-//            mapLongitude
-//            mapLatitude
-//
-            /* Time details */
-//            timeHour
-//            timeMinute
-//
-            /* Date details */
-//            dateYear
-//            dateMonth
-//            dateDay
+                //System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
+                Task task = new Task(nowUseAsId, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
 
 
-            //System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
-            Task task = new Task(nowUseAsId, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
+                singleton.getInstance(this).getArrayList().add(0, task);
+
+                //-----continue checking from here -> to register date & cancel alarmManager after if click done
+                saveToDb(task);
+                //create alarm from DATE+Time+ID details
+                // using alarmManager
 
 
-            singleton.getInstance(this).getArrayList().add(0, task);
+                // initialize Task Message
+                description.setText("");
+                initialize_variables();
 
-            //-----continue checking from here -> to register date & cancel alarmManager after if click done
-            saveToDb(task);
-            //create alarm from DATE+Time+ID details
-            // using alarmManager
+                updateListView();
+            }else{
+                /* is in edit mode */
+                // try to update this task in DB
 
-
-            // initialize EditText ob
-            description.setText("");
-
-            /* initialize variables */
-            mapLongitude= -1;
-            mapLatitude= -1;
-            timeHour= -1;
-            timeMinute= -1;
-            dateYear= -1;
-            dateMonth= -1;
-            dateDay= -1;
-            /* end initialize variables */
-
-            updateListView();
+                // initialize
+                editTaskBoolean = false;
+                initialize_variables();
+            }
         }
+    }
+
+    public void initialize_variables(){
+        /* initialize variables */
+        // Map
+        mapLongitude= -1;
+        mapLatitude= -1;
+        // Time
+        timeHour= -1;
+        timeMinute= -1;
+        // Date
+        dateYear= -1;
+        dateMonth= -1;
+        dateDay= -1;
     }
 
     public void saveToDb(Task newTask){
