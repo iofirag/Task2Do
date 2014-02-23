@@ -50,7 +50,7 @@
         android:gravity="center"
         android:weightSum="1"
         android:id="@+id/listViewExtraOptions"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageButton
             android:layout_width="wrap_content"

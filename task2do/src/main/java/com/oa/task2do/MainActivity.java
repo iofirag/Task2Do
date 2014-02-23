@@ -15,6 +15,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -46,9 +47,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     private long lastPressedTime;
     private static final int PERIOD = 2000;
 
-    //private TimePicker timePicker;
-    //private DatePicker datePicker;
-    //private Task newTask;
+    private boolean extras = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +93,13 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         et.addTextChangedListener(tw);
 
         //try to inflate list view with listeners
-        //ListView ls = (ListView) findViewById(R.id.listView);
-        //Toast.makeText(getApplicationContext(), "נלחץ", Toast.LENGTH_SHORT).show();
+        ListView ls = (ListView) findViewById(R.id.listView);
+        ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
     }
 
 
@@ -259,9 +263,15 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
 
         //try to inflate the chosen tab
-        //LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listViewExtraOptions);
-        //linearLayout.setVisibility(LinearLayout.VISIBLE);
-
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listViewExtraOptions);
+        if(extras) {
+            linearLayout.setVisibility(LinearLayout.VISIBLE);
+            extras= false;
+        }
+        else {
+            linearLayout.setVisibility(LinearLayout.GONE);
+            extras= true;
+        }
         currentList.notifyDataSetChanged();
     }
 
