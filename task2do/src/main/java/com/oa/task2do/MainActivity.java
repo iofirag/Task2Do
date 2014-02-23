@@ -3,6 +3,7 @@ package com.oa.task2do;
 import android.annotation.TargetApi;
 import android.app.DialogFragment;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,7 +11,11 @@ import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -38,9 +43,11 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     private int dateMonth= -1;
     private int dateDay= -1;
 
-//    private TimePicker timePicker;
-//    private DatePicker datePicker;
-    //private Task newTask;
+    //back key press event
+    private long lastPressedTime;
+    private static final int PERIOD = 2000;
+
+    private boolean extras = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,19 +58,21 @@ public class MainActivity extends FragmentActivity implements DialogListener {
             restoreFromDb();
 
         currentList = new TaskListBaseAdapter(this, singleton.getInstance(this).getArrayList());
-//        ListView listView = (ListView) findViewById(R.id.listView);
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> a, View v, int position, long id) {
-//                //editTask(v);
-//                //System.out.println("list view itemClick");
-//            }
-//        });
+
+        /* when etNewTask pressed then show the extra buttons */
+        EditText newTask = (EditText) findViewById(R.id.etNewTask);
+        newTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).isActive()) {
+                    LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
+                    linearLayout.setVisibility(LinearLayout.VISIBLE);
+                }
+            }
+        });
 
 
-
-
-        /* inflate bar by text change */
+        /* inflate extra bar when text change */
         tw = new TextWatcher() {
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
             public void afterTextChanged(Editable s){
@@ -83,29 +92,46 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         EditText et = (EditText) findViewById(R.id.etNewTask);
         et.addTextChangedListener(tw);
 
+        //try to inflate list view with listeners
+        ListView ls = (ListView) findViewById(R.id.listView);
+        ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
     }
+
 
     @Override
     protected void onResume(){
         super.onResume();
         updateListView();
         currentList.notifyDataSetChanged();
-
-//        /* try to inflate by focus change */
-//        EditText etNewTask = (EditText) findViewById(R.id.etNewTask);
-//        etNewTask.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View view, boolean hasFocus) {
-//                LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
-//                if(hasFocus){
-//                    linearLayout.setVisibility(LinearLayout.VISIBLE);
-//                } else {
-//                    linearLayout.setVisibility(LinearLayout.GONE);
-//                }
-//            }
-//        });
     }
 
+    /* handel with back key
+     * when pressed twice the application closed
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            switch (event.getAction()) {
+                case KeyEvent.ACTION_DOWN:
+                    if (event.getDownTime() - lastPressedTime < PERIOD) {
+                        finish();
+                    } else {
+                        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
+                        linearLayout.setVisibility(LinearLayout.GONE);
+                        Toast.makeText(getApplicationContext(), "Press again to exit.",
+                                Toast.LENGTH_SHORT).show();
+                        lastPressedTime = event.getEventTime();
+                    }
+                    return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * All types of Dialogs
@@ -159,29 +185,6 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         }
     }
 
-
-
-/*    public void showExtraOptions(View view, boolean hasFocus)
-    {
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
-        if (hasFocus){
-            linearLayout.setVisibility(LinearLayout.VISIBLE);
-        }
-        else{
-            linearLayout.setVisibility(LinearLayout.GONE);
-        }
-    }*/
-
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
-
-
     /**
      *
      * Returning data from FragmentDialogs
@@ -230,37 +233,6 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         }
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-//    public static class PlaceholderFragment extends Fragment {
-//
-//        public PlaceholderFragment() {
-//        }
-//
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                Bundle savedInstanceState) {
-//            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-//            return rootView;
-//        }
-//    }
-
-
-
-
     public void restoreFromDb(){
         List<Task> list = singleton.getInstance(this).getDb().getAllTasks();
         for(Task task : list){
@@ -282,16 +254,25 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         ListView listView = (ListView) findViewById(R.id.listView);
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
-        Toast.makeText(MainActivity.this, "edited item : " + " " +
-                selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
-        currentList.notifyDataSetChanged();
+        //makeText(MainActivity.this, "edited item : " + " " +
+                //selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
 
-        //LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listViewExtraOptions);
-        /*
-        if (linearLayout.getVisibility()==View.GONE)
-            linearLayout.setVisibility(View.VISIBLE);
-        else
-            linearLayout.setVisibility(View.GONE); */
+        //close keyboard and set focusable false to etNetTask
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
+
+        //try to inflate the chosen tab
+        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listViewExtraOptions);
+        if(extras) {
+            linearLayout.setVisibility(LinearLayout.VISIBLE);
+            extras= false;
+        }
+        else {
+            linearLayout.setVisibility(LinearLayout.GONE);
+            extras= true;
+        }
+        currentList.notifyDataSetChanged();
     }
 
     public void done(View view) {
