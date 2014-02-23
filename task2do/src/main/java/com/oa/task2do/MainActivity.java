@@ -15,7 +15,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -54,6 +53,14 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /* avoid keyboard show automatic */
+        ListView lv = (ListView) findViewById(R.id.listView);
+        //close keyboard and set focusable false to etNetTask
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(lv.getWindowToken(), 0);
+
+        /* If there is Tasks in the DataBase restore them */
         if (singleton.getInstance(this).getArrayList().isEmpty())
             restoreFromDb();
 
@@ -66,7 +73,9 @@ public class MainActivity extends FragmentActivity implements DialogListener {
             public void onClick(View v) {
                 if (((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).isActive()) {
                     LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
-                    linearLayout.setVisibility(LinearLayout.VISIBLE);
+                    if (linearLayout.getVisibility()== View.VISIBLE )
+                        linearLayout.setVisibility(LinearLayout.GONE);
+                    else linearLayout.setVisibility(LinearLayout.VISIBLE);
                 }
             }
         });
@@ -92,14 +101,15 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         EditText et = (EditText) findViewById(R.id.etNewTask);
         et.addTextChangedListener(tw);
 
-        //try to inflate list view with listeners
-        ListView ls = (ListView) findViewById(R.id.listView);
-        ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            }
-        });
+//        //try to inflate list view with listeners
+//        ListView ls = (ListView) findViewById(R.id.listView);
+//        ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//            }
+//        });
     }
 
 
@@ -251,28 +261,35 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     /* inflate edit options bar of the task clicked */
     public void editTask (View view) {
 
+        /* close the upper bar */
+        LinearLayout linearLayout1 = (LinearLayout) findViewById(R.id.extraOptions);
+        if (linearLayout1.getVisibility()== View.VISIBLE )
+            linearLayout1.setVisibility(LinearLayout.GONE);
+
+        /* Get the specific Task in this place */
         ListView listView = (ListView) findViewById(R.id.listView);
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
         //makeText(MainActivity.this, "edited item : " + " " +
                 //selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
 
-        //close keyboard and set focusable false to etNetTask
+
+        /* close keyboard and set focusable false to etNetTask */
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
 
-        //try to inflate the chosen tab
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listViewExtraOptions);
-        if(extras) {
-            linearLayout.setVisibility(LinearLayout.VISIBLE);
-            extras= false;
-        }
-        else {
-            linearLayout.setVisibility(LinearLayout.GONE);
-            extras= true;
-        }
-        currentList.notifyDataSetChanged();
+//        //try to inflate the chosen tab
+//        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listViewExtraOptions);
+//        if(extras) {
+//            linearLayout.setVisibility(LinearLayout.VISIBLE);
+//            extras= false;
+//        }
+//        else {
+//            linearLayout.setVisibility(LinearLayout.GONE);
+//            extras= true;
+//        }
+//        currentList.notifyDataSetChanged();
     }
 
     public void done(View view) {
