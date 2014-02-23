@@ -42,6 +42,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     private int dateMonth= -1;
     private int dateDay= -1;
 
+    //back key press event
     private long lastPressedTime;
     private static final int PERIOD = 2000;
 
@@ -92,6 +93,9 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         EditText et = (EditText) findViewById(R.id.etNewTask);
         et.addTextChangedListener(tw);
 
+        //try to inflate list view with listeners
+        //ListView ls = (ListView) findViewById(R.id.listView);
+        //Toast.makeText(getApplicationContext(), "נלחץ", Toast.LENGTH_SHORT).show();
     }
 
 
@@ -246,15 +250,17 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         ListView listView = (ListView) findViewById(R.id.listView);
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
-        Toast.makeText(MainActivity.this, "edited item : " + " " +
-                selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
+        //makeText(MainActivity.this, "edited item : " + " " +
+                //selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
 
         //close keyboard and set focusable false to etNetTask
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
 
-        
+        //try to inflate the chosen tab
+        //LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listViewExtraOptions);
+        //linearLayout.setVisibility(LinearLayout.VISIBLE);
 
         currentList.notifyDataSetChanged();
     }
