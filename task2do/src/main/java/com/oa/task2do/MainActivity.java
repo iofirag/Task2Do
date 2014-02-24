@@ -1,7 +1,9 @@
 package com.oa.task2do;
 
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
 import android.app.DialogFragment;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +23,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements DialogListener {
@@ -102,14 +105,6 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         et.addTextChangedListener(tw);
 
 
-//        //try to inflate list view with listeners
-//        ListView ls = (ListView) findViewById(R.id.listView);
-//        ls.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//            }
-//        });
     }
 
 
@@ -270,26 +265,59 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         ListView listView = (ListView) findViewById(R.id.listView);
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
-        //makeText(MainActivity.this, "edited item : " + " " +
-                //selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
-
+        //Toast.makeText(MainActivity.this, "edited item : " + " " +
+        //        selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
 
         /* close keyboard and set focusable false to etNetTask */
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
 
-//        //try to inflate the chosen tab
-//        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.listViewExtraOptions);
-//        if(extras) {
-//            linearLayout.setVisibility(LinearLayout.VISIBLE);
-//            extras= false;
-//        }
-//        else {
-//            linearLayout.setVisibility(LinearLayout.GONE);
-//            extras= true;
-//        }
         currentList.notifyDataSetChanged();
+    }
+
+    private void createAlarm(Task task){
+        System.out.println("***********create alarm start****************");
+        Calendar cal = Calendar.getInstance();
+        if (timeHour != -1 && timeMinute != -1 && dateDay == -1 && dateMonth == -1 && dateYear == -1){
+            cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DAY_OF_MONTH),timeHour,timeMinute);
+        }
+
+        if (dateDay != -1 && dateMonth != -1 && dateYear != -1 && timeHour != -1 && timeMinute != -1) {
+            cal.set(dateYear, dateMonth, dateDay, timeHour, timeMinute);
+        }
+
+        if (dateDay != -1 && dateMonth != -1 && dateYear != -1 && timeHour == -1 && timeMinute == -1) {
+            cal.set(dateYear,dateMonth,dateDay,10,0);
+        }
+
+        if (timeHour == -1 && timeMinute == -1 && dateDay == -1 && dateMonth == -1 && dateYear == -1){
+            return;
+        }
+
+
+        Intent intent = new Intent("com.oa.task2do.ReminderBroadCastReceiver");
+        intent.putExtra("taskMessage", task.getTaskMessage() );
+//                        System.out.println("task.getTaskMessage()="+task.getTaskMessage());
+
+        intent.putExtra("taskId", task.getID());
+//                        System.out.println("task.getID()="+task.getID());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, task.getID(), intent, 0);
+        System.out.println("******************ALARM_SERVICE***********************");
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + millisecondsUntilDate(cal) , pendingIntent);
+    }
+
+    public long millisecondsUntilDate(Calendar nextDate){
+        Calendar now = Calendar.getInstance();
+        long diff_in_ms = nextDate.getTimeInMillis()-now.getTimeInMillis();
+        System.out.println("****************************************************");
+        System.out.println( now.getTimeInMillis());
+        System.out.println( nextDate.getTimeInMillis());
+        System.out.println( diff_in_ms );
+        return diff_in_ms;
+
     }
 
     public void done(View view) {
@@ -348,6 +376,10 @@ public class MainActivity extends FragmentActivity implements DialogListener {
             //create alarm from DATE+Time+ID details
             // using alarmManager
 
+            /*
+            * send into broadCast if needed
+            * */
+            createAlarm(task);
 
             // initialize EditText ob
             description.setText("");
