@@ -52,7 +52,6 @@ import java.util.Calendar;
             //data.putExtra("timePicker", timePicker);
             data.putExtra("hour", hourOfDay);
             data.putExtra("minute", minute);
-            System.out.println("33333333333333333");
             DialogListener activity = (DialogListener) getActivity();
             activity.onFinishEditDialog(data);
             this.dismiss();

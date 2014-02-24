@@ -1,7 +1,9 @@
 package com.oa.task2do;
 
 import android.annotation.TargetApi;
+import android.app.AlarmManager;
 import android.app.DialogFragment;
+import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +23,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements DialogListener {
@@ -32,6 +36,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     Singleton singleton=null;
     private TaskListBaseAdapter currentList;
     private TextWatcher tw;
+
+    private int taskIdSelected= -1;
 
     private double mapLongitude= -1;
     private double mapLatitude= -1;
@@ -294,7 +300,10 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
 
+
         /* load all variables from task (if have) to local variables (use in dialogs) */
+        // ID
+        taskIdSelected = selectedTask._id;
         // Message
         EditText message = (EditText) findViewById(R.id.etNewTask);
         message.setText( selectedTask._taskMessage );
@@ -318,6 +327,107 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
         currentList.notifyDataSetChanged();
     }
+
+
+    // if user check the dateButton
+    private void createAlarmAtDate(Task task){
+
+        Intent intent = new Intent();
+        intent.setAction("com.oa.task2do.ReminderBroadCastReceiver");
+        intent.putExtra("taskMessage", task._taskMessage );
+        intent.putExtra("taskId", task._id);
+
+        // For test:
+        //sendBroadcast(intent);
+//                        System.out.println("task.getID()="+task.getID());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, task.getID(), intent, 0);
+
+        /* getting all parameters of create Date ob from task */
+        Date date = new Date();
+        // fix date before
+        date.setYear(date.getYear()+1900);
+        date.setMonth(date.getMonth()+1);
+
+        //System.out.println("----------------"+task._dateYear+" "+task._dateMonth+" "+task._dateDay+" "+task._timeHour+" "+task._timeMinute);
+        if (task._dateDay != -1 && task._dateMonth != -1 && task._dateYear != -1){
+            date.setYear(   task._dateYear  );
+            date.setMonth(  task._dateMonth );
+            date.setDate(   task._dateDay   );
+        }
+        if (task._timeHour != -1 && task._timeMinute != -1){
+            date.setHours(  task._timeHour  );
+            date.setMinutes(task._timeMinute);
+        }
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + millisecondsUntilDate(date) , pendingIntent);
+    }
+
+    public long millisecondsUntilDate(Date nextDate){
+        Date now = new Date();
+
+        // fix date before calculate
+        now.setYear(now.getYear()+1900);
+        now.setMonth(now.getMonth()+1);
+        System.out.println("----------------"+now.getYear()+" "+now.getMonth()+" "+now.getDate()+" "+now.getHours()+" "+now.getMinutes());
+
+        GregorianCalendar currentDay=new  GregorianCalendar (now.getYear(),now.getMonth(),now.getDay(),now.getHours(),now.getMinutes(),0);
+        GregorianCalendar nextDay=new  GregorianCalendar (nextDate.getYear(),nextDate.getMonth(),nextDate.getDay(),nextDate.getHours(),nextDate.getMinutes(),0);
+
+                        System.out.println( nextDate.getYear()  +" " +   now.getYear()   );
+                        System.out.println( nextDate.getMonth() +" " +  now.getMonth()   );
+                        System.out.println( nextDate.getDay()   +" " +     now.getDay()  );
+                        System.out.println( nextDate.getHours() +" " +   now.getHours()  );
+                        System.out.println(nextDate.getMinutes()+" " +  now.getMinutes() );
+
+        long diff_in_ms = nextDay.getTimeInMillis()-currentDay.getTimeInMillis();
+                             System.out.println("diff_in_s=" +diff_in_ms/1000);
+                             System.out.println("diff_in_m=" +diff_in_ms/60000);
+        return diff_in_ms;
+    }
+
+
+//    private void createAlarm(Task task){
+//        System.out.println("***********create alarm start****************");
+//        Calendar cal = Calendar.getInstance();
+//
+//        Date day
+//        if (timeHour != -1 && timeMinute != -1 ){
+//            if (dateDay != -1 && dateMonth != -1 && dateYear != -1) {
+//                cal.set(dateYear, dateMonth, dateDay, timeHour, timeMinute);
+//            }
+//
+//        if (dateDay != -1 && dateMonth != -1 && dateYear != -1 && timeHour == -1 && timeMinute == -1) {
+//            cal.set(dateYear,dateMonth,dateDay,10,0);
+//        }
+//
+//        if (timeHour == -1 && timeMinute == -1 && dateDay == -1 && dateMonth == -1 && dateYear == -1){
+//            return;
+//        }
+//
+//
+//        Intent intent = new Intent("com.oa.task2do.ReminderBroadCastReceiver");
+//        intent.putExtra("taskMessage", task.getTaskMessage() );
+////                        System.out.println("task.getTaskMessage()="+task.getTaskMessage());
+//
+//        intent.putExtra("taskId", task.getID());
+////                        System.out.println("task.getID()="+task.getID());
+//
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, task.getID(), intent, 0);
+//        System.out.println("******************ALARM_SERVICE***********************");
+//        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+//        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + millisecondsUntilDate(cal) , pendingIntent);
+//    }
+//
+//    public long millisecondsUntilDate(Calendar nextDate){
+//        Calendar now = Calendar.getInstance();
+//        long diff_in_ms = nextDate.getTimeInMillis()-now.getTimeInMillis();
+//        System.out.println("****************************************************");
+//        System.out.println( now.getTimeInMillis());
+//        System.out.println( nextDate.getTimeInMillis());
+//        System.out.println( diff_in_ms );
+//        return diff_in_ms;
+//    }
 
     public void done(View view) {
 
@@ -360,23 +470,32 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
                 //-----continue checking from here -> to register date & cancel alarmManager after if click done
                 saveToDb(task);
+
                 //create alarm from DATE+Time+ID details
                 // using alarmManager
+                if ((timeHour != -1 && timeMinute != -1 ) || (dateDay != -1 && dateMonth != -1 && dateYear != -1)) {
+                    createAlarmAtDate(task);
+                }
 
 
-                // initialize Task Message
-                description.setText("");
-                initialize_variables();
-
-                updateListView();
             }else{
                 /* is in edit mode */
                 // try to update this task in DB
 
+                /* Text Message */
+                String taskMessage = description.getText().toString();
+
+                Task editedTask = new Task(taskIdSelected, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
+                updateTaskInDb(editedTask);
+
                 // initialize
                 editTaskBoolean = false;
-                initialize_variables();
             }
+            // initialize Task Message
+            description.setText("");
+            initialize_variables();
+
+            updateListView();
         }
     }
 
@@ -396,5 +515,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
     public void saveToDb(Task newTask){
         singleton.getInstance(this).getDb().addTask(newTask);
+    }
+    public void updateTaskInDb(Task editTask){
+        singleton.getInstance(this).getDb().updateTask(editTask);
     }
 }

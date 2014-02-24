@@ -139,10 +139,29 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    // Deleting single contact
+    // Deleting single task
     public void deleteTask(Task task) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_TASKS, KEY_ID + " = ?",
+                new String[]{String.valueOf(task.getID())});
+        db.close();
+    }
+
+    // Update a single task
+    public void updateTask(Task task) {
+        SQLiteDatabase db = this.getWritableDatabase();
+         // The fields
+        ContentValues con = new ContentValues();
+        con.put(KEY_MESSAGE, task._taskMessage);
+        con.put(KEY_DATE_YEAR, task._dateYear);
+        con.put(KEY_DATE_MONTH, task._dateMonth);
+        con.put(KEY_DATE_DAY, task._dateDay);
+        con.put(KEY_TIME_HOUR, task._timeHour);
+        con.put(KEY_TIME_MINUTES, task._timeMinute);
+        con.put(KEY_LOCATION_LONGITUDE, task._mapLongitude);
+        con.put(KEY_LOCATION_LATITUDE, task._mapLatitude);
+
+        db.update(TABLE_TASKS, con, KEY_ID + " = ?",
                 new String[] { String.valueOf(task.getID()) });
         db.close();
     }
