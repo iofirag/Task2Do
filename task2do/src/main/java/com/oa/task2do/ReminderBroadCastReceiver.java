@@ -27,7 +27,7 @@ public class ReminderBroadCastReceiver extends BroadcastReceiver {
         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, myIntent, 0);
 
-        Notification notification = new Notification(R.drawable.ic_launcher, "New scheduled task", System.currentTimeMillis());
+        Notification notification = new Notification(R.drawable.ic_launcher, "task2Do-"+notificationText , System.currentTimeMillis());
         notification.setLatestEventInfo( context,"Task2Do", notificationText, pendingIntent);
         notification.flags = Notification.FLAG_AUTO_CANCEL;
         notificationManager.notify(null, taskId, notification); //0 is id

@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by joe on 25/10/13.
@@ -30,8 +31,19 @@ public class TaskListBaseAdapter extends BaseAdapter {
         return taskDetailsArrayList.get(position);
     }
 
+    @Override
     public long getItemId(int position) {
-        return position;
+        return taskDetailsArrayList.get(position).getID();
+    }
+
+    public Task getItemID(long id) {
+        for(Iterator<Task> i = taskDetailsArrayList.iterator(); i.hasNext(); ) {
+            Task item = i.next();
+            if (item.getID() == (int)id ){
+                return item;
+            }
+        }
+        return null;
     }
 
     private static class ViewHolder {

@@ -33,7 +33,7 @@
         <!-- fingerPrint for google-play-services -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAyBdjuuyZcclMO4TSPlaz_yuxkiTSa008"/>
+            android:value="AIzaSyDb15C8iH3WAQaVK785_BuoSfDASRAON3A"/>
 
 
         <!-- main activity -->
