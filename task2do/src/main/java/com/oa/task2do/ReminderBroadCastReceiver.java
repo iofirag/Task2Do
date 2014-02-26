@@ -17,7 +17,6 @@ public class ReminderBroadCastReceiver extends BroadcastReceiver {
     public void	onReceive(Context context,	Intent intent)	{
                                 System.out.println("BroadcastReceiver: onRecive()");
 
-
         NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Get taskId & message
@@ -25,6 +24,7 @@ public class ReminderBroadCastReceiver extends BroadcastReceiver {
         String notificationText = intent.getStringExtra("taskMessage");
 
         Intent myIntent = new Intent(context, MainActivity.class);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, myIntent, 0);
 
         Notification notification = new Notification(R.drawable.ic_launcher, "New scheduled task", System.currentTimeMillis());

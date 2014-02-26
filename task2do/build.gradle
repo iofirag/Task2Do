@@ -35,4 +35,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:+'
     //added
     compile 'com.google.android.gms:play-services:4.0.30'
+    compile files('libs/libGoogleAnalyticsV2.jar')
 }

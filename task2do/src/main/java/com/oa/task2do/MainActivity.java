@@ -22,6 +22,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -55,6 +57,24 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
     private boolean extras = true;
     private boolean editTaskBoolean = false;
+
+
+    /**
+     * google analytics
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -332,6 +352,14 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     // if user check the dateButton
     private void createAlarmAtDate(Task task){
 
+        /* google analytics */
+        // Set Context before using EasyTracker. Note that the SDK will
+        // use the application context.
+        EasyTracker.getInstance().setContext(this);
+        EasyTracker.getInstance().activityStart(this); // Add this method.
+
+        // EasyTracker is now ready for use.
+
         Intent intent = new Intent();
         intent.setAction("com.oa.task2do.ReminderBroadCastReceiver");
         intent.putExtra("taskMessage", task._taskMessage );
@@ -485,6 +513,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
                 /* Text Message */
                 String taskMessage = description.getText().toString();
 
+                System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
                 Task editedTask = new Task(taskIdSelected, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
                 updateTaskInDb(editedTask);
 
