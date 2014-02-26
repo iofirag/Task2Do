@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -313,15 +312,23 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         EditText message = (EditText) findViewById(R.id.etNewTask);
         message.setText( selectedTask._taskMessage );
         // Location
-//        mapLongitude = selectedTask._mapLongitude;
-//        mapLatitude = selectedTask._mapLatitude;
-//        // Date
-//        dateYear = selectedTask._dateYear;
-//        dateMonth = selectedTask._dateMonth;
-//        dateDay = selectedTask._dateDay;
-//        // Time
-//        timeHour = selectedTask._timeHour;
-//        timeMinute = selectedTask._timeMinute;
+        if (selectedTask._mapLongitude != 0 )
+        mapLongitude = selectedTask._mapLongitude;
+        if (selectedTask._mapLatitude != 0 )
+        mapLatitude = selectedTask._mapLatitude;
+        // Date
+        if (selectedTask._dateYear != 0 )
+        dateYear = selectedTask._dateYear;
+        if (selectedTask._dateMonth != 0 )
+        dateMonth = selectedTask._dateMonth;
+        if (selectedTask._dateDay != 0 )
+        dateDay = selectedTask._dateDay;
+        // Time
+        if (selectedTask._timeHour != 0 )
+        timeHour = selectedTask._timeHour;
+        if (selectedTask._timeMinute != 0 )
+        timeMinute = selectedTask._timeMinute;
+
 
         /* close keyboard and set focusable false to etNetTask */
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -511,21 +518,15 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
         // new intent
         Intent intent = new Intent();
-        intent.setAction("com.oa.task2do.LocationNotification");
+        intent.setAction("com.oa.task2do.ReminderBroadCastReceiver");
+        //intent.setAction("com.oa.task2do.LocationNotification");
         intent.putExtra("taskMessage", currentList.getItemID(editTaskBoolean).getTaskMessage() );
         intent.putExtra("taskId", currentList.getItemID(editTaskBoolean).getID());
         intent.putExtra("codeLocation", Integer.toString(editTaskBoolean));
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentList.getItemID(editTaskBoolean).getID(), intent, PendingIntent.FLAG_ONE_SHOT);
 
-        //add alarm 1 km radius
         lm.addProximityAlert(mapLatitude, mapLongitude,1000, -1, pendingIntent);
-
-        AlarmManager mgr=(AlarmManager)getSystemService(ALARM_SERVICE);
-        mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                SystemClock.elapsedRealtime(),
-                PERIOD,
-                pendingIntent);
 
     }
 
