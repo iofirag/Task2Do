@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
@@ -23,8 +24,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 public class MainActivity extends FragmentActivity implements DialogListener {
@@ -54,7 +55,10 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     private static final int PERIOD = 2000;
 
     private boolean extras = true;
-    private boolean editTaskBoolean = false;
+    private int editTaskBoolean = -1;
+
+    //location alert
+    private LocationManager lm=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -308,23 +312,31 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         EditText message = (EditText) findViewById(R.id.etNewTask);
         message.setText( selectedTask._taskMessage );
         // Location
+        if (selectedTask._mapLongitude != 0 )
         mapLongitude = selectedTask._mapLongitude;
+        if (selectedTask._mapLatitude != 0 )
         mapLatitude = selectedTask._mapLatitude;
         // Date
+        if (selectedTask._dateYear != 0 )
         dateYear = selectedTask._dateYear;
+        if (selectedTask._dateMonth != 0 )
         dateMonth = selectedTask._dateMonth;
+        if (selectedTask._dateDay != 0 )
         dateDay = selectedTask._dateDay;
         // Time
+        if (selectedTask._timeHour != 0 )
         timeHour = selectedTask._timeHour;
+        if (selectedTask._timeMinute != 0 )
         timeMinute = selectedTask._timeMinute;
+
 
         /* close keyboard and set focusable false to etNetTask */
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
 
-        editTaskBoolean=true;
-
+        editTaskBoolean=taskIdSelected;
+        //System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+message);
         currentList.notifyDataSetChanged();
     }
 
@@ -337,18 +349,16 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         intent.putExtra("taskMessage", task._taskMessage );
         intent.putExtra("taskId", task._id);
 
-        // For test:
-        //sendBroadcast(intent);
-//                        System.out.println("task.getID()="+task.getID());
-
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, task.getID(), intent, 0);
 
         /* getting all parameters of create Date ob from task */
         Date date = new Date();
-        // fix date before
+        // fix date before and set a default day
         date.setYear(date.getYear()+1900);
         date.setMonth(date.getMonth()+1);
-
+        date.setDate(date.getDay());
+        date.setHours(10);
+        date.setMinutes(0);
         //System.out.println("----------------"+task._dateYear+" "+task._dateMonth+" "+task._dateDay+" "+task._timeHour+" "+task._timeMinute);
         if (task._dateDay != -1 && task._dateMonth != -1 && task._dateYear != -1){
             date.setYear(   task._dateYear  );
@@ -359,75 +369,30 @@ public class MainActivity extends FragmentActivity implements DialogListener {
             date.setHours(  task._timeHour  );
             date.setMinutes(task._timeMinute);
         }
+        if (task._timeHour == -1 && task._timeMinute == -1 && task._dateDay == -1 && task._dateMonth == -1 && task._dateYear == -1){
+            return;
+        }
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + millisecondsUntilDate(date) , pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + millisecondsUntilDate() , pendingIntent);
     }
 
-    public long millisecondsUntilDate(Date nextDate){
-        Date now = new Date();
+    public long millisecondsUntilDate(){
+        Calendar cal = Calendar.getInstance();
+        if (timeHour != -1 && timeMinute != -1 && dateDay == -1 && dateMonth == -1 && dateYear == -1){
+            cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DAY_OF_MONTH),timeHour,timeMinute);
+        }
 
-        // fix date before calculate
-        now.setYear(now.getYear()+1900);
-        now.setMonth(now.getMonth()+1);
-        System.out.println("----------------"+now.getYear()+" "+now.getMonth()+" "+now.getDate()+" "+now.getHours()+" "+now.getMinutes());
+        if (dateDay != -1 && dateMonth != -1 && dateYear != -1 && timeHour != -1 && timeMinute != -1) {
+            cal.set(dateYear, dateMonth, dateDay, timeHour, timeMinute);
+        }
 
-        GregorianCalendar currentDay=new  GregorianCalendar (now.getYear(),now.getMonth(),now.getDay(),now.getHours(),now.getMinutes(),0);
-        GregorianCalendar nextDay=new  GregorianCalendar (nextDate.getYear(),nextDate.getMonth(),nextDate.getDay(),nextDate.getHours(),nextDate.getMinutes(),0);
-
-                        System.out.println( nextDate.getYear()  +" " +   now.getYear()   );
-                        System.out.println( nextDate.getMonth() +" " +  now.getMonth()   );
-                        System.out.println( nextDate.getDay()   +" " +     now.getDay()  );
-                        System.out.println( nextDate.getHours() +" " +   now.getHours()  );
-                        System.out.println(nextDate.getMinutes()+" " +  now.getMinutes() );
-
-        long diff_in_ms = nextDay.getTimeInMillis()-currentDay.getTimeInMillis();
-                             System.out.println("diff_in_s=" +diff_in_ms/1000);
-                             System.out.println("diff_in_m=" +diff_in_ms/60000);
+        if (dateDay != -1 && dateMonth != -1 && dateYear != -1 && timeHour == -1 && timeMinute == -1) {
+            cal.set(dateYear,dateMonth,dateDay,10,0);
+        }
+        Calendar now = Calendar.getInstance();
+        long diff_in_ms = cal.getTimeInMillis()-now.getTimeInMillis();
         return diff_in_ms;
     }
-
-
-//    private void createAlarm(Task task){
-//        System.out.println("***********create alarm start****************");
-//        Calendar cal = Calendar.getInstance();
-//
-//        Date day
-//        if (timeHour != -1 && timeMinute != -1 ){
-//            if (dateDay != -1 && dateMonth != -1 && dateYear != -1) {
-//                cal.set(dateYear, dateMonth, dateDay, timeHour, timeMinute);
-//            }
-//
-//        if (dateDay != -1 && dateMonth != -1 && dateYear != -1 && timeHour == -1 && timeMinute == -1) {
-//            cal.set(dateYear,dateMonth,dateDay,10,0);
-//        }
-//
-//        if (timeHour == -1 && timeMinute == -1 && dateDay == -1 && dateMonth == -1 && dateYear == -1){
-//            return;
-//        }
-//
-//
-//        Intent intent = new Intent("com.oa.task2do.ReminderBroadCastReceiver");
-//        intent.putExtra("taskMessage", task.getTaskMessage() );
-////                        System.out.println("task.getTaskMessage()="+task.getTaskMessage());
-//
-//        intent.putExtra("taskId", task.getID());
-////                        System.out.println("task.getID()="+task.getID());
-//
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, task.getID(), intent, 0);
-//        System.out.println("******************ALARM_SERVICE***********************");
-//        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-//        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + millisecondsUntilDate(cal) , pendingIntent);
-//    }
-//
-//    public long millisecondsUntilDate(Calendar nextDate){
-//        Calendar now = Calendar.getInstance();
-//        long diff_in_ms = nextDate.getTimeInMillis()-now.getTimeInMillis();
-//        System.out.println("****************************************************");
-//        System.out.println( now.getTimeInMillis());
-//        System.out.println( nextDate.getTimeInMillis());
-//        System.out.println( diff_in_ms );
-//        return diff_in_ms;
-//    }
 
     public void done(View view) {
 
@@ -453,7 +418,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         EditText description = (EditText) findViewById(R.id.etNewTask);
         if (!description.getText().toString().isEmpty()){
 
-            if (editTaskBoolean==false){
+            if ( editTaskBoolean == -1 ){
             /* not in edit mode */
                 /* Create ID for the Task by get currentTimeMillis of this moment */
                 int nowUseAsId = (int) (long) System.currentTimeMillis();
@@ -464,7 +429,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
                 //System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
                 Task task = new Task(nowUseAsId, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
-
+                System.out.println("********************************USUAL*********************************************************");
+                System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
 
                 singleton.getInstance(this).getArrayList().add(0, task);
 
@@ -473,23 +439,37 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
                 //create alarm from DATE+Time+ID details
                 // using alarmManager
-                if ((timeHour != -1 && timeMinute != -1 ) || (dateDay != -1 && dateMonth != -1 && dateYear != -1)) {
+              if ((timeHour != -1 && timeMinute != -1 ) || (dateDay != -1 && dateMonth != -1 && dateYear != -1) ) {
                     createAlarmAtDate(task);
+                }
+                if (mapLatitude != -1 && mapLongitude != -1){
+                    lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    setAlaramLocation(mapLatitude,mapLongitude);
                 }
 
 
-            }else{
+            }
+            else{
                 /* is in edit mode */
                 // try to update this task in DB
 
                 /* Text Message */
                 String taskMessage = description.getText().toString();
-
                 Task editedTask = new Task(taskIdSelected, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
+                System.out.println("********************************EDITED*********************************************************");
+                System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
                 updateTaskInDb(editedTask);
-
+                updateTaskInArray(editedTask);
+                if ((timeHour != -1 && timeMinute != -1 ) || (dateDay != -1 && dateMonth != -1 && dateYear != -1) ) {
+                    createAlarmAtDate(editedTask);
+                }
+                if (mapLatitude != -1 && mapLongitude != -1){
+                    lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    setAlaramLocation(mapLatitude,mapLongitude);
+                }
                 // initialize
-                editTaskBoolean = false;
+                editTaskBoolean = -1;
+
             }
             // initialize Task Message
             description.setText("");
@@ -511,6 +491,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         dateYear= -1;
         dateMonth= -1;
         dateDay= -1;
+
+
     }
 
     public void saveToDb(Task newTask){
@@ -519,4 +501,34 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     public void updateTaskInDb(Task editTask){
         singleton.getInstance(this).getDb().updateTask(editTask);
     }
+    public void updateTaskInArray(Task editTask){
+        for (int i=0 ; i< currentList.getCount();i++)
+        {
+            if (((Task)currentList.getItem(i)).getID()==editTaskBoolean)
+            {
+                ((Task)currentList.getItem(i)).setTaskMessage(editTask.getTaskMessage());
+            }
+        }
+    }
+
+    //Set Alaram Location func
+    public void setAlaramLocation(Double mapLatitude ,Double mapLongitude){
+
+        System.out.println("*********************LOCATION***************************");
+
+        // new intent
+        Intent intent = new Intent();
+        intent.setAction("com.oa.task2do.ReminderBroadCastReceiver");
+        //intent.setAction("com.oa.task2do.LocationNotification");
+        intent.putExtra("taskMessage", currentList.getItemID(editTaskBoolean).getTaskMessage() );
+        intent.putExtra("taskId", currentList.getItemID(editTaskBoolean).getID());
+        intent.putExtra("codeLocation", Integer.toString(editTaskBoolean));
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentList.getItemID(editTaskBoolean).getID(), intent, PendingIntent.FLAG_ONE_SHOT);
+
+        lm.addProximityAlert(mapLatitude, mapLongitude,1000, -1, pendingIntent);
+
+    }
+
+
 }
