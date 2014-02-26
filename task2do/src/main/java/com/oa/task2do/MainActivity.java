@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -514,13 +515,17 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         intent.putExtra("taskMessage", currentList.getItemID(editTaskBoolean).getTaskMessage() );
         intent.putExtra("taskId", currentList.getItemID(editTaskBoolean).getID());
         intent.putExtra("codeLocation", Integer.toString(editTaskBoolean));
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentList.getItemID(editTaskBoolean).getID(), intent, PendingIntent.FLAG_ONE_SHOT);
 
         //add alarm 1 km radius
         lm.addProximityAlert(mapLatitude, mapLongitude,1000, -1, pendingIntent);
 
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + millisecondsUntilDate() , pendingIntent);
+        AlarmManager mgr=(AlarmManager)getSystemService(ALARM_SERVICE);
+        mgr.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                SystemClock.elapsedRealtime(),
+                PERIOD,
+                pendingIntent);
 
     }
 
