@@ -1,13 +1,10 @@
 package com.oa.task2do;
 
-import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +36,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_TIME_MINUTES = "minutes";
     private static final String KEY_LOCATION_LONGITUDE = "longitude";
     private static final String KEY_LOCATION_LATITUDE = "latitude";
+    private static final String KEY_ALARM = "alarm";
+    private static final String KEY_DONE = "done";
 
 
     public DatabaseHandler(Context context) {
@@ -58,7 +57,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TIME_HOUR         + " , "
                 + KEY_TIME_MINUTES      + " , "
                 + KEY_LOCATION_LONGITUDE+ " , "
-                + KEY_LOCATION_LATITUDE
+                + KEY_LOCATION_LATITUDE + " , "
+                + KEY_ALARM             + " , "
+                + KEY_DONE
                 + ")";
         db.execSQL(CREATE_TASKS_TABLE);
     }
@@ -93,6 +94,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_TIME_MINUTES, task._timeMinute);
         values.put(KEY_LOCATION_LONGITUDE, task._mapLongitude);
         values.put(KEY_LOCATION_LATITUDE, task._mapLatitude);
+        values.put(KEY_ALARM, task._alarm);
+        values.put(KEY_DONE, task._done);
 
         // Inserting Row
         db.insert(TABLE_TASKS, null, values );
@@ -119,7 +122,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // Getting All Tasks
     public List<Task> getAllTasks() {
-        List<Task> contactList = new ArrayList<Task>();
+        List<Task> taskList = new ArrayList<Task>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_TASKS;
 
@@ -132,13 +135,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 Task task = new Task();
                 task.setID(Integer.parseInt(cursor.getString(0)));
                 task.setTaskMessage(cursor.getString(1));
-                // Adding contact to list
-                contactList.add(task);
+                // Adding task to list
+                taskList.add(task);
             } while (cursor.moveToNext());
         }
 
         // return contact list
-        return contactList;
+        return taskList;
     }
 
 
@@ -163,6 +166,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         con.put(KEY_TIME_MINUTES, task._timeMinute);
         con.put(KEY_LOCATION_LONGITUDE, task._mapLongitude);
         con.put(KEY_LOCATION_LATITUDE, task._mapLatitude);
+        con.put(KEY_ALARM, task._alarm);
+        con.put(KEY_DONE, task._done);
 
         db.update(TABLE_TASKS, con, KEY_ID + " = ?",
                 new String[] { String.valueOf(task.getID()) });

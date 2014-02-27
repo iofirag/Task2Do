@@ -5,8 +5,7 @@ package com.oa.task2do;
  */
 public class Task {
     int _id;
-    public boolean _alarm=false;
-    public boolean _done=false;
+
     public String _taskMessage ;
     public int _dateYear;
     public int _dateMonth;
@@ -16,10 +15,11 @@ public class Task {
     public double _mapLongitude;
     public double _mapLatitude;
 
+    public int _alarm = -1;
+    public int _done = -1;
 
 
-
-    public Task(int id, /*boolean _alarm, boolean _done,*/ String taskMessage, int dateYear, int dateMonth, int dateDay, int timeHour, int timeMinute, double mapLongitude, double mapLatitude) {
+    public Task(int id, int alarm, /* boolean done,*/ String taskMessage, int dateYear, int dateMonth, int dateDay, int timeHour, int timeMinute, double mapLongitude, double mapLatitude) {
        /* alarm */
 //        if ( (dateYear!=-1&&dateMonth!=-1&&dateDay!=-1) || (timeHour!=-1&&timeMinute!=-1) || (mapLongitude!=-1&&mapLatitude!=-1) )
 //            _alarm=true;
@@ -39,6 +39,8 @@ public class Task {
 
         this._mapLongitude=mapLongitude;
         this._mapLatitude=mapLatitude;
+
+        this._alarm=alarm;
     }
 
     public Task() {

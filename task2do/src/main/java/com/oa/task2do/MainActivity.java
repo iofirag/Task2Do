@@ -2,10 +2,12 @@ package com.oa.task2do;
 
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Build;
@@ -42,8 +44,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
     private int taskIdSelected= -1;
 
-    private boolean editTask_hasAlarm=false;
-    private boolean editTask_hasBeenDone=false;
+    private int editTask_hasAlarm=0;        //0 no , 1 yes
+    private int editTask_hasBeenDone=0;     //0 no , 1 yes
 
     private double mapLongitude= -1;
     private double mapLatitude= -1;
@@ -59,11 +61,11 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     private long lastPressedTime;
     private static final int PERIOD = 2000;
 
-    private boolean extras = true;
     private int editTaskBoolean = -1;   //id of task in edit
 
     //location alert
     private LocationManager lm=null;
+
 
 
     /**
@@ -79,8 +81,6 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         super.onStop();
         EasyTracker.getInstance().activityStop(this);
     }
-
-
 
 
     @Override
@@ -186,6 +186,17 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         }
         newFragment.show(getFragmentManager(), "timePicker");
     }
+
+    //show alert dialog
+    public void alertDialog(View v) {
+        DialogFragment newFragment = new com.oa.task2do.AlertDialog();
+
+        // add details if user want to edit exist task
+
+
+        newFragment.show(getFragmentManager(), "alertPicker");
+    }
+
     /* Date-Picker Dialog */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showDatePickerDialog(View v) {
@@ -333,8 +344,10 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         taskIdSelected = selectedTask._id;
         // if was Alarm
         editTask_hasAlarm = selectedTask._alarm;
+        System.out.println("-------editTask_hasAlarm="+editTask_hasAlarm);
         // if was Done
         editTask_hasBeenDone = selectedTask._done;
+        System.out.println("-------editTask_hasBeenDone="+editTask_hasBeenDone);
         // Message
         EditText message = (EditText) findViewById(R.id.etNewTask);
         message.setText( selectedTask._taskMessage );
@@ -373,7 +386,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
         setAlaramLocation(mapLatitude,mapLongitude);
     }
-..
+
     // if user check the date or time Button
     private void createAlarmAtDate(Task task){
 
@@ -440,7 +453,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         ListView listView = (ListView) findViewById(R.id.listView);
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
-        selectedTask._done=true;
+        selectedTask._done=1;
 
         /* update the task is done in DB */
         singleton.getInstance(this).getDb().updateTask(selectedTask);
@@ -450,7 +463,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         // updateListView() ?  to update the listView at the same moment
     }
 
-    public void delete(View view) {
+    /*public void delete(View view) {
         ListView listView = (ListView) findViewById(R.id.listView);
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
@@ -458,6 +471,14 @@ public class MainActivity extends FragmentActivity implements DialogListener {
                 selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
         DeleteFromDb(selectedTask, position);
         currentList.notifyDataSetChanged();
+    }*/
+    public void delete(View view) {
+        ListView listView = (ListView) findViewById(R.id.listView);
+        int position = listView.getPositionForView(view);
+        Task selectedTask = (Task) listView.getItemAtPosition(position);
+
+        /* delete alert dialog */
+        showDelteAlert("DELETE", selectedTask.getTaskMessage(), view);
     }
 
     public void DeleteFromDb(Task taskToDelete, int position){
@@ -471,6 +492,13 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         EditText description = (EditText) findViewById(R.id.etNewTask);
         if (!description.getText().toString().isEmpty()){
 
+            // change boolean value if task have any alarm
+            if ((timeHour != -1 && timeMinute != -1 )                       // if time change
+                    || (dateDay != -1 && dateMonth != -1 && dateYear != -1) // if date change
+                    || (mapLatitude != -1 && mapLongitude != -1)) {         // if location change
+                editTask_hasAlarm=1;
+            }
+
             if ( editTaskBoolean == -1 ){
             /* not in edit mode */
                 /* Create ID for the Task by get currentTimeMillis of this moment */
@@ -481,20 +509,20 @@ public class MainActivity extends FragmentActivity implements DialogListener {
                 String taskMessage = description.getText().toString();
 
                 //System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
-                Task task = new Task(nowUseAsId, /*false, false,*/ taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
-                System.out.println("********************************USUAL*********************************************************");
-                System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
+                Task task = new Task(nowUseAsId, editTask_hasAlarm, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
+                    System.out.println("********************************USUAL*********************************************************");
+                    System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
 
                 singleton.getInstance(this).getArrayList().add(0, task);
 
                 //-----continue checking from here -> to register date & cancel alarmManager after if click done
                 saveToDb(task);
 
-                //create alarm from DATE+Time+ID details
-                // using alarmManager
+                /* create alarm if time or date change */
               if ((timeHour != -1 && timeMinute != -1 ) || (dateDay != -1 && dateMonth != -1 && dateYear != -1) ) {
                     createAlarmAtDate(task);
                 }
+                /* create alarm if location change */
                 if (mapLatitude != -1 && mapLongitude != -1){
                     createAlarmInLocation();
                 }
@@ -508,23 +536,24 @@ public class MainActivity extends FragmentActivity implements DialogListener {
                 /* Text Message */
                 String taskMessage = description.getText().toString();
 
-
-0000000000000000000000000-------until here i change done and alram ---
-                Task editedTask = new Task(taskIdSelected, /*false, false,*/ taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
-                    System.out.println("********************************EDITED*********************************************************");
-                    System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
-                updateTaskInDb(editedTask);
-                updateTaskInArray(editedTask);
+                Task editedTask = new Task(taskIdSelected, editTask_hasAlarm, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude);
+                        //System.out.println("********************************EDITED*********************************************************");
+                        //System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
+                /* create alarm if time or date change */
                 if ((timeHour != -1 && timeMinute != -1 ) || (dateDay != -1 && dateMonth != -1 && dateYear != -1) ) {
                     createAlarmAtDate(editedTask);
                 }
+                /* create alarm if location change */
                 if (mapLatitude != -1 && mapLongitude != -1){
-                    lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    setAlaramLocation(mapLatitude,mapLongitude);
+                    createAlarmInLocation();
                 }
+                /* update the DB */
+                updateTaskInDb(editedTask);
+                /* update the list */
+                updateTaskInArray(editedTask);
+
                 // initialize
                 editTaskBoolean = -1;
-                editTask_hasBeenDone = false;
             }
             // initialize Task Message
             description.setText("");
@@ -547,7 +576,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         dateMonth= -1;
         dateDay= -1;
 
-
+        editTask_hasBeenDone = 0;
+        editTask_hasAlarm = 0;
     }
 
     public void saveToDb(Task newTask){
@@ -585,5 +615,85 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
     }
 
+    public void showDelteAlert(String title, String message, final View view)
+    {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
 
+        // set title
+        alertDialogBuilder.setTitle(title);
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        ListView listView = (ListView) findViewById(R.id.listView);
+                        int position = listView.getPositionForView(view);
+                        Task selectedTask = (Task) listView.getItemAtPosition(position);
+//                        Toast.makeText(MainActivity.this, "deleted item : " + " " +
+//                                selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
+                        DeleteFromDb(selectedTask, position);
+                        currentList.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+        //return choice;
+    }
+
+
+    public void showEditAlert(String title, String message, final View view)
+    {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+
+        // set title
+        alertDialogBuilder.setTitle(title);
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        ListView listView = (ListView) findViewById(R.id.listView);
+                        int position = listView.getPositionForView(view);
+                        Task selectedTask = (Task) listView.getItemAtPosition(position);
+
+                        currentList.notifyDataSetChanged();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+        //return choice;
+    }
 }
