@@ -14,12 +14,11 @@ public class Task {
     public int _timeMinute;
     public double _mapLongitude;
     public double _mapLatitude;
+    public int _alarm;
+    public int _done;
 
-    public int _alarm = -1;
-    public int _done = -1;
 
-
-    public Task(int id, int alarm, /* boolean done,*/ String taskMessage, int dateYear, int dateMonth, int dateDay, int timeHour, int timeMinute, double mapLongitude, double mapLatitude) {
+    public Task(int id,/* boolean done,*/ String taskMessage, int dateYear, int dateMonth, int dateDay, int timeHour, int timeMinute, double mapLongitude, double mapLatitude ,int alarm , int done) {
        /* alarm */
 //        if ( (dateYear!=-1&&dateMonth!=-1&&dateDay!=-1) || (timeHour!=-1&&timeMinute!=-1) || (mapLongitude!=-1&&mapLatitude!=-1) )
 //            _alarm=true;
@@ -41,6 +40,7 @@ public class Task {
         this._mapLatitude=mapLatitude;
 
         this._alarm=alarm;
+        this._done=done;
     }
 
     public Task() {
@@ -75,5 +75,21 @@ public class Task {
     @Override
     public String toString (){
         return this._taskMessage;
+    }
+
+    // set/get Alarm
+    public int get_alarm(){
+        return this._alarm;
+    }
+    public void set_alarm(int alarm){
+        this._alarm = alarm;
+    }
+
+    // set/get Done
+    public int get_done(){
+        return this._done;
+    }
+    public void set_done(int done){
+        this._done = done;
     }
 }
