@@ -2,10 +2,12 @@ package com.oa.task2do;
 
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.DialogFragment;
 import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.os.Build;
@@ -59,6 +61,9 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
     //location alert
     private LocationManager lm=null;
+
+    //alert choice
+    boolean choice=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +168,17 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         }
         newFragment.show(getFragmentManager(), "timePicker");
     }
+
+    //show alert dialog
+    public void alertDialog(View v) {
+        DialogFragment newFragment = new com.oa.task2do.AlertDialog();
+
+        // add details if user want to edit exist task
+
+
+        newFragment.show(getFragmentManager(), "alertPicker");
+    }
+
     /* Date-Picker Dialog */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public void showDatePickerDialog(View v) {
@@ -240,6 +256,12 @@ public class MainActivity extends FragmentActivity implements DialogListener {
             dateMonth = data.getExtras().getInt("month");
         if (data.getExtras().containsKey("day"))
             dateDay = data.getExtras().getInt("day");
+
+        //alert dialog
+        if (data.getExtras().containsKey("yes"))
+            choice=true;
+        if (data.getExtras().containsKey("no"))
+            choice=false;
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -399,14 +421,31 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         ListView listView = (ListView) findViewById(R.id.listView);
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
-        Toast.makeText(MainActivity.this, "deleted item : " + " " +
+        Toast.makeText(MainActivity.this, "DONE : " + " " +
                 selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
-        Delete(selectedTask, position);
+
         currentList.notifyDataSetChanged();
 
     }
+    public void delete(View view) {
+        ListView listView = (ListView) findViewById(R.id.listView);
+        int position = listView.getPositionForView(view);
+        Task selectedTask = (Task) listView.getItemAtPosition(position);
 
-    public void Delete(Task taskToDelete, int position){
+        showDelteAlert("DELETE", selectedTask.getTaskMessage(), view);
+//        if (choice){
+//        ListView listView = (ListView) findViewById(R.id.listView);
+//        int position = listView.getPositionForView(view);
+//        Task selectedTask = (Task) listView.getItemAtPosition(position);
+//        Toast.makeText(MainActivity.this, "deleted item : " + " " +
+//                selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
+//        DeleteFromDb(selectedTask, position);
+//        currentList.notifyDataSetChanged();
+//        }
+
+    }
+
+    public void DeleteFromDb(Task taskToDelete, int position){
         singleton.getInstance(this).getArrayList().remove(position);
         singleton.getInstance(this).getDb().deleteTask( taskToDelete);
         updateListView();
@@ -492,7 +531,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         dateMonth= -1;
         dateDay= -1;
 
-
+        //alert
+        choice=false;
     }
 
     public void saveToDb(Task newTask){
@@ -530,5 +570,96 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
     }
 
+    public void showDelteAlert(String title, String message, final View view)
+    {
+        choice=false;
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
 
+        // set title
+        alertDialogBuilder.setTitle(title);
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        ListView listView = (ListView) findViewById(R.id.listView);
+                        int position = listView.getPositionForView(view);
+                        Task selectedTask = (Task) listView.getItemAtPosition(position);
+//                        Toast.makeText(MainActivity.this, "deleted item : " + " " +
+//                                selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
+                        DeleteFromDb(selectedTask, position);
+                        currentList.notifyDataSetChanged();
+                        choice=true;
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+        //return choice;
+    }
+
+
+//    ListView listView = (ListView) findViewById(R.id.listView);
+//    int position = listView.getPositionForView(view);
+//    Task selectedTask = (Task) listView.getItemAtPosition(position);
+
+    //showDelteAlert("DELETE", selectedTask.getTaskMessage(),view);
+
+    public void showEditAlert(String title, String message, final View view)
+    {
+        choice=false;
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                this);
+
+        // set title
+        alertDialogBuilder.setTitle(title);
+
+        // set dialog message
+        alertDialogBuilder
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog,int id) {
+                        // if this button is clicked, close
+                        // current activity
+                        ListView listView = (ListView) findViewById(R.id.listView);
+                        int position = listView.getPositionForView(view);
+                        Task selectedTask = (Task) listView.getItemAtPosition(position);
+
+                        currentList.notifyDataSetChanged();
+                        choice=true;
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // if this button is clicked, just close
+                        // the dialog box and do nothing
+
+                        dialog.cancel();
+                    }
+                });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+        //return choice;
+    }
 }

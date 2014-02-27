@@ -33,8 +33,7 @@
             android:id="@+id/saveTastButton"
             android:onClick="saveTask"
             android:singleLine="true"
-            android:background="@drawable/abc_ic_go"
-            android:layout_weight="0.05" />
+            android:background="@android:drawable/ic_input_add" />
 
     </LinearLayout>
 

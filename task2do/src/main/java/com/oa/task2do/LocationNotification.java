@@ -26,6 +26,7 @@ public class LocationNotification  extends BroadcastReceiver {
         String notificationText = intent.getStringExtra("taskMessage");
 
         Intent myIntent = new Intent(context, MainActivity.class);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, taskId, myIntent,  PendingIntent.FLAG_ONE_SHOT);
 
 //        Notification notification = new Notification(R.drawable.ic_launcher, "task notification", System.currentTimeMillis());

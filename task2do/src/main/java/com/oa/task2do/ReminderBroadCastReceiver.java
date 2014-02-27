@@ -25,6 +25,7 @@ public class ReminderBroadCastReceiver extends BroadcastReceiver {
         String notificationText = intent.getStringExtra("taskMessage");
 
         Intent myIntent = new Intent(context, MainActivity.class);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, myIntent, 0);
 
         Notification notification = new Notification(R.drawable.ic_launcher, "task2Do-"+notificationText , System.currentTimeMillis());
