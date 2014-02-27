@@ -5,6 +5,8 @@ package com.oa.task2do;
  */
 public class Task {
     int _id;
+    public boolean _alarm=false;
+    public boolean _done=false;
     public String _taskMessage ;
     public int _dateYear;
     public int _dateMonth;
@@ -15,7 +17,16 @@ public class Task {
     public double _mapLatitude;
 
 
-    public Task(int id, String taskMessage, int dateYear, int dateMonth, int dateDay, int timeHour, int timeMinute, double mapLongitude, double mapLatitude) {
+
+
+    public Task(int id, /*boolean _alarm, boolean _done,*/ String taskMessage, int dateYear, int dateMonth, int dateDay, int timeHour, int timeMinute, double mapLongitude, double mapLatitude) {
+       /* alarm */
+//        if ( (dateYear!=-1&&dateMonth!=-1&&dateDay!=-1) || (timeHour!=-1&&timeMinute!=-1) || (mapLongitude!=-1&&mapLatitude!=-1) )
+//            _alarm=true;
+
+        /* done */
+        //do something with done
+
         this._id=id;
         this._taskMessage=taskMessage;
 
@@ -30,6 +41,8 @@ public class Task {
         this._mapLatitude=mapLatitude;
     }
 
+    public Task() {
+    }
 
     public int get_id() {
         return _id;
@@ -38,8 +51,7 @@ public class Task {
         this._id = _id;
     }
 
-    public Task() {
-    }
+
     /*-------------------------------------------*/
 
     // set/get taskMessage
@@ -58,19 +70,8 @@ public class Task {
         this._id = id;
     }
 
-    // set/get Date
-//    public Date get_date() {
-//        return _date;
-//    }
-//    public void set_date(Date _date) {
-//        this._date = _date;
-//    }
-
     @Override
     public String toString (){
         return this._taskMessage;
     }
-
-    public static int Y(int year)  {return year-1900;}
-    public static int M(int month) {return month-1;}
 }

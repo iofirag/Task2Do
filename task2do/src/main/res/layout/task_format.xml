@@ -35,7 +35,7 @@
             android:layout_alignBottom="@+id/taskText"
             android:lines="1"
             android:layout_toRightOf="@+id/taskText"
-            android:onClick="done"
+            android:onClick="delete"
             android:clickable="true"
             android:layout_weight="0.05" />
     </LinearLayout>
