@@ -429,6 +429,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
                 System.out.println("********************************USUAL*********************************************************");
                 System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
 
+                ifEditTask=nowUseAsId;
                 singleton.getInstance(this).getArrayList().add(0, task);
 
                 //-----continue checking from here -> to register date & cancel alarmManager after if click done
@@ -437,19 +438,19 @@ public class MainActivity extends FragmentActivity implements DialogListener {
                 //create alarm from DATE+Time+ID details
                 // using alarmManager
                 if ((timeHour != -1 && timeMinute != -1 ) || (dateDay != -1 && dateMonth != -1 && dateYear != -1) ) {
-                    createAlarmAtDate(task);
                     hasAlarm=1;
                     task.set_alarm(hasAlarm);
                     isDone=0;
                     task.set_done(isDone);
+                    createAlarmAtDate(task);
                 }
                 if (mapLatitude != -1 && mapLongitude != -1){
-                    lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    setAlaramLocation(mapLatitude,mapLongitude);
                     hasAlarm=1;
                     task.set_alarm(hasAlarm);
                     isDone=0;
                     task.set_done(isDone);
+                    lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    setAlaramLocation(mapLatitude,mapLongitude);
                 }
 
 
@@ -466,22 +467,20 @@ public class MainActivity extends FragmentActivity implements DialogListener {
                 updateTaskInDb(editedTask);
                 updateTaskInArray(editedTask);
                 if ((timeHour != -1 && timeMinute != -1 ) || (dateDay != -1 && dateMonth != -1 && dateYear != -1) ) {
-                    createAlarmAtDate(editedTask);
                     hasAlarm=1;
                     editedTask.set_alarm(hasAlarm);
                     isDone=0;
                     editedTask.set_done(isDone);
+                    createAlarmAtDate(editedTask);
                 }
                 if (mapLatitude != -1 && mapLongitude != -1){
-                    lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    setAlaramLocation(mapLatitude,mapLongitude);
                     hasAlarm=1;
                     editedTask.set_alarm(hasAlarm);
                     isDone=0;
                     editedTask.set_done(isDone);
+                    lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    setAlaramLocation(mapLatitude,mapLongitude);
                 }
-                // initialize
-                ifEditTask = -1;
 
             }
             // initialize Task Message
@@ -507,6 +506,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
         hasAlarm=0;
         isDone=0;
+
+        ifEditTask=-1;
     }
 
     public void saveToDb(Task newTask){
