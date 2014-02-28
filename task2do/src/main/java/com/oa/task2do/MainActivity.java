@@ -409,9 +409,10 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
         //currentList.getItem(position).
 
+
+        updateTaskInArray(selectedTask);
+        updateListView();   //check d
         //restoreFromDb();
-        //updateTaskInArray(selectedTask);
-        //updateListView();   //check d
 
         currentList.notifyDataSetChanged();
 
