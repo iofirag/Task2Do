@@ -33,6 +33,7 @@ public class ReminderBroadCastReceiver extends BroadcastReceiver {
         notification.defaults |= Notification.DEFAULT_VIBRATE;
         notificationManager.notify(null, taskId, notification); //0 is id
 
+
 //        // Vibrate the mobile phone
 //        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 //        vibrator.vibrate(200);
