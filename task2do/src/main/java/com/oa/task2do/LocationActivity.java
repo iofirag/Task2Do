@@ -10,6 +10,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.google.analytics.tracking.android.EasyTracker;
@@ -38,6 +40,7 @@ public class LocationActivity extends FragmentActivity {
 
     private double longitude =-1.;
     private double latitude =-1.;
+    private int radius =500;
 
 
     /**
@@ -152,6 +155,10 @@ public class LocationActivity extends FragmentActivity {
                 updateMap(latLng);
                 longitude = address.getLongitude();
                 latitude = address.getLatitude();
+                RadioGroup g = (RadioGroup) findViewById(R.id.radioGroup);
+                int selected = g.getCheckedRadioButtonId();
+                RadioButton b = (RadioButton) findViewById(selected);
+                radius=Integer.parseInt(b.getText().toString());
             } else {
                 out = "Not found";
             }
@@ -191,6 +198,7 @@ public class LocationActivity extends FragmentActivity {
         //---set the data to pass back---
         data.putExtra("longitude", longitude);
         data.putExtra("latitude", latitude);
+        data.putExtra("radius", radius);
         setResult(RESULT_OK, data);
         //---closes the activity---
         finish();

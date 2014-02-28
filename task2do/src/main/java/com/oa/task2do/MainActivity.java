@@ -24,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
     private double mapLongitude= -1;
     private double mapLatitude= -1;
+    private int mapRadius= 500;
 
     private int timeHour = -1;
     private int timeMinute= -1;
@@ -205,6 +207,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         if (mapLatitude != -1 && mapLongitude != -1){
             intent.putExtra("mapLatitude", mapLatitude);
             intent.putExtra("mapLongitude", mapLongitude);
+            intent.putExtra("radius", mapRadius);
         }
 
         try {
@@ -278,6 +281,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
                     // Receive 2 parameters from MAP activity
                     mapLongitude= data.getDoubleExtra("longitude", 0);
                     mapLatitude= data.getDoubleExtra("latitude", 0);
+                    mapRadius= data.getIntExtra("radius", 0);
                 }
                 break;
             }
@@ -449,19 +453,19 @@ public class MainActivity extends FragmentActivity implements DialogListener {
                 //create alarm from DATE+Time+ID details
                 // using alarmManager
                 if ((timeHour != -1 && timeMinute != -1 ) || (dateDay != -1 && dateMonth != -1 && dateYear != -1) ) {
-                    createAlarmAtDate(task);
                     hasAlarm=1;
                     task.set_alarm(hasAlarm);
                     isDone=0;
                     task.set_done(isDone);
+                    createAlarmAtDate(task);
                 }
                 if (mapLatitude != -1 && mapLongitude != -1){
-                    lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    setAlaramLocation(mapLatitude,mapLongitude);
                     hasAlarm=1;
                     task.set_alarm(hasAlarm);
                     isDone=0;
                     task.set_done(isDone);
+                    lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    setAlaramLocation(mapLatitude,mapLongitude,mapRadius);
                 }
 
 
@@ -478,22 +482,20 @@ public class MainActivity extends FragmentActivity implements DialogListener {
                 updateTaskInDb(editedTask);
                 updateTaskInArray(editedTask);
                 if ((timeHour != -1 && timeMinute != -1 ) || (dateDay != -1 && dateMonth != -1 && dateYear != -1) ) {
-                    createAlarmAtDate(editedTask);
                     hasAlarm=1;
                     editedTask.set_alarm(hasAlarm);
                     isDone=0;
                     editedTask.set_done(isDone);
+                    createAlarmAtDate(editedTask);
                 }
                 if (mapLatitude != -1 && mapLongitude != -1){
-                    lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    setAlaramLocation(mapLatitude,mapLongitude);
                     hasAlarm=1;
                     editedTask.set_alarm(hasAlarm);
                     isDone=0;
                     editedTask.set_done(isDone);
+                    lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                    setAlaramLocation(mapLatitude,mapLongitude,mapRadius);
                 }
-                // initialize
-                ifEditTask = -1;
 
             }
             // initialize Task Message
@@ -519,6 +521,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
         hasAlarm=0;
         isDone=0;
+
+        ifEditTask=-1;
     }
 
     public void saveToDb(Task newTask){
@@ -543,9 +547,38 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     }
 
     //Set Alaram Location func
-    public void setAlaramLocation(Double mapLatitude ,Double mapLongitude){
-
+    public void setAlaramLocation(Double mapLatitude ,Double mapLongitude,double radius){
         System.out.println("*********************LOCATION***************************");
+//        int radius=500;
+//        // Gets a reference to our radio group
+//// rBtnDigits is the name of our radio group (code not shown)
+//        RadioGroup g = (RadioGroup) findViewById(R.id.radioGroup);
+//
+//// Returns an integer which represents the selected radio button's ID
+//        int selected = g.getCheckedRadioButtonId();
+//
+//// Gets a reference to our "selected" radio button
+//        RadioButton b = (RadioButton) findViewById(selected);
+//
+//// Now you can get the text or whatever you want from the "selected" radio button
+//
+////        RadioButton radio500 = (RadioButton) findViewById(R.id.radius500);
+////        RadioButton radio1000 = (RadioButton) findViewById(R.id.radius1000);
+////        RadioButton radio1500 = (RadioButton) findViewById(R.id.radius1500);
+////        RadioButton radio2000 = (RadioButton) findViewById(R.id.radius2000);
+////        //RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+//
+//        radius=Integer.parseInt(b.getText().toString());
+////        System.out.println("*********************"+ radius +"***************************");
+////        if(radio500.isChecked()){
+////            radius = Integer.parseInt((String) radio500.getText());}
+////        else if(radio1000.isChecked()){
+////            radius = Integer.parseInt((String) radio1000.getText());}
+////        else if(radio1500.isChecked()){
+////            radius = Integer.parseInt((String) radio1500.getText());}
+////        else if(radio2000.isChecked()){
+////            radius = Integer.parseInt((String) radio2000.getText());}
+//        System.out.println("*********************"+ radius +"***************************");
 
         // new intent
         Intent intent = new Intent();
@@ -557,8 +590,38 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentList.getItemID(ifEditTask).getID(), intent, PendingIntent.FLAG_ONE_SHOT);
 
-        lm.addProximityAlert(mapLatitude, mapLongitude,1000, -1, pendingIntent);
+        lm.addProximityAlert(mapLatitude, mapLongitude,mapRadius, -1, pendingIntent);
 
+    }
+    //radio button in location layout
+    public int onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+        int radius=500;
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radius500:
+                if (checked){
+                    RadioButton radio500 = (RadioButton) findViewById(R.id.radius500);
+                    radius = Integer.parseInt((String) radio500.getText());
+                    break;}
+            case R.id.radius1000:
+                if (checked){
+                    RadioButton radio1000 = (RadioButton) findViewById(R.id.radius1000);
+                    radius = Integer.parseInt((String) radio1000.getText());
+                    break;}
+            case R.id.radius1500:
+                if (checked){
+                    RadioButton radio1500 = (RadioButton) findViewById(R.id.radius1500);
+                    radius = Integer.parseInt((String) radio1500.getText());
+                    break;}
+            case R.id.radius2000:
+                if (checked){
+                    RadioButton radio2000 = (RadioButton) findViewById(R.id.radius2000);
+                    radius = Integer.parseInt((String) radio2000.getText());
+                    break;}
+        }
+        return radius;
     }
 
     //display alert when task is deleted
@@ -674,4 +737,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         alertDialog.show();
 
     }
+
+
+
 }
