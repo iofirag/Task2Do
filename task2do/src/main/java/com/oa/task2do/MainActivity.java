@@ -32,41 +32,33 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity implements DialogListener {
+public class MainActivity extends FragmentActivity implements DialogListener  {
 
+    Singleton singleton=null;
     private static final int EDIT_TASK = 1232;
     private static final int RESULT_MAP = 1233;
     private static final int RESULT_SPEECH = 1234;
-
-    Singleton singleton=null;
     private TaskListBaseAdapter currentList;
     private TextWatcher tw;
-
     private int taskIdSelected= -1;
-
     private int hasAlarm=0; //0 no , 1 yes
     private int isDone=0;   //0 no , 1 yes
-
     private double mapLongitude= -1;
     private double mapLatitude= -1;
     private int mapRadius= 500;
-
     private int timeHour = -1;
     private int timeMinute= -1;
-
     private int dateYear= -1;
     private int dateMonth= -1;
     private int dateDay= -1;
-
     //back key press event
     private long lastPressedTime;
     private static final int PERIOD = 2000;
-
     private boolean extras = true;
     private int ifEditTask = -1;
-
     //location alert
     private LocationManager lm=null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,8 +113,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         };
         EditText et = (EditText) findViewById(R.id.etNewTask);
         et.addTextChangedListener(tw);
-    }
 
+    }
 
     @Override
     protected void onResume(){
@@ -153,6 +145,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         }
         return false;
     }
+
 
     /**
      * All types of Dialogs
@@ -329,7 +322,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
 
-        showEditAlert("EDIT", selectedTask.getTaskMessage(),view);
+
+        showEditAlert("EDIT", selectedTask.getTaskMessage(), view);
 
         /* close keyboard and set focusable false to etNetTask */
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -423,7 +417,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         ListView listView = (ListView) findViewById(R.id.listView);
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
-
+        taskIdSelected=selectedTask.getID();
         showDelteAlert("DELETE", selectedTask.getTaskMessage(), view);
 
     }
@@ -533,6 +527,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         isDone=0;
 
         ifEditTask=-1;
+        taskIdSelected=-1;
     }
 
     public void saveToDb(Task newTask){
@@ -544,7 +539,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     public void updateTaskInArray(Task editTask){
         for (int i=0 ; i< currentList.getCount();i++)
         {
-            if (((Task)currentList.getItem(i)).getID()== ifEditTask)
+            if (((Task)currentList.getItem(i)).getID()== taskIdSelected)
             {
                 ((Task)currentList.getItem(i)).setTaskMessage(editTask.getTaskMessage());
                 if (((Task)currentList.getItem(i))._done==1) {
@@ -558,46 +553,16 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     //Set Alaram Location func
     public void setAlaramLocation(Double mapLatitude ,Double mapLongitude,double radius){
         System.out.println("*********************LOCATION***************************");
-//        int radius=500;
-//        // Gets a reference to our radio group
-//// rBtnDigits is the name of our radio group (code not shown)
-//        RadioGroup g = (RadioGroup) findViewById(R.id.radioGroup);
-//
-//// Returns an integer which represents the selected radio button's ID
-//        int selected = g.getCheckedRadioButtonId();
-//
-//// Gets a reference to our "selected" radio button
-//        RadioButton b = (RadioButton) findViewById(selected);
-//
-//// Now you can get the text or whatever you want from the "selected" radio button
-//
-////        RadioButton radio500 = (RadioButton) findViewById(R.id.radius500);
-////        RadioButton radio1000 = (RadioButton) findViewById(R.id.radius1000);
-////        RadioButton radio1500 = (RadioButton) findViewById(R.id.radius1500);
-////        RadioButton radio2000 = (RadioButton) findViewById(R.id.radius2000);
-////        //RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
-//
-//        radius=Integer.parseInt(b.getText().toString());
-////        System.out.println("*********************"+ radius +"***************************");
-////        if(radio500.isChecked()){
-////            radius = Integer.parseInt((String) radio500.getText());}
-////        else if(radio1000.isChecked()){
-////            radius = Integer.parseInt((String) radio1000.getText());}
-////        else if(radio1500.isChecked()){
-////            radius = Integer.parseInt((String) radio1500.getText());}
-////        else if(radio2000.isChecked()){
-////            radius = Integer.parseInt((String) radio2000.getText());}
-//        System.out.println("*********************"+ radius +"***************************");
 
         // new intent
         Intent intent = new Intent();
         intent.setAction("com.oa.task2do.ReminderBroadCastReceiver");
         //intent.setAction("com.oa.task2do.LocationNotification");
-        intent.putExtra("taskMessage", currentList.getItemID(ifEditTask).getTaskMessage() );
-        intent.putExtra("taskId", currentList.getItemID(ifEditTask).getID());
-        intent.putExtra("codeLocation", Integer.toString(ifEditTask));
+        intent.putExtra("taskMessage", currentList.getItemByID(taskIdSelected).getTaskMessage() );
+        intent.putExtra("taskId", currentList.getItemByID(taskIdSelected).getID());
+        intent.putExtra("codeLocation", Integer.toString(taskIdSelected));
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentList.getItemID(ifEditTask).getID(), intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentList.getItemByID(taskIdSelected).getID(), intent, PendingIntent.FLAG_ONE_SHOT);
 
         lm.addProximityAlert(mapLatitude, mapLongitude,mapRadius, -1, pendingIntent);
 
@@ -702,7 +667,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 
                          /* load all variables from task (if have) to local variables (use in dialogs) */
                         // ID
-                        taskIdSelected = selectedTask._id;
+                        taskIdSelected = selectedTask.get_id();
                         // Message
                         EditText message = (EditText) findViewById(R.id.etNewTask);
                         message.setText( selectedTask._taskMessage );
@@ -746,7 +711,6 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         alertDialog.show();
 
     }
-
 
 
 }
