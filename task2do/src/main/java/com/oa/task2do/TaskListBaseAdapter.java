@@ -36,7 +36,7 @@ public class TaskListBaseAdapter extends BaseAdapter {
         return taskDetailsArrayList.get(position).getID();
     }
 
-    public Task getItemID(long id) {
+    public Task getItemByID(long id) {
         for(Iterator<Task> i = taskDetailsArrayList.iterator(); i.hasNext(); ) {
             Task item = i.next();
             if (item.getID() == (int)id ){
