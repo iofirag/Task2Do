@@ -20,7 +20,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -397,21 +396,16 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         /* change button background */
 //        Button btDone = (Button) findViewById(R.id.doneButton);
 //        btDone.setBackgroundResource(android.R.drawable.checkbox_on_background);
-        ifEditTask = selectedTask._id;
+        ifEditTask = taskIdSelected = selectedTask._id;
         selectedTask._done=1;
         updateTaskInDb(selectedTask);
-
-        //currentList.getItem(position).
-
-
         updateTaskInArray(selectedTask);
         updateListView();   //check d
         //restoreFromDb();
 
         currentList.notifyDataSetChanged();
 
-        //initialize
-        ifEditTask = -1;
+        initialize_variables();
     }
     public void delete(View view) {
         ListView listView = (ListView) findViewById(R.id.listView);
@@ -536,6 +530,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
     public void updateTaskInDb(Task editTask){
         singleton.getInstance(this).getDb().updateTask(editTask);
     }
+
     public void updateTaskInArray(Task editTask){
         for (int i=0 ; i< currentList.getCount();i++)
         {
@@ -543,8 +538,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
             {
                 ((Task)currentList.getItem(i)).setTaskMessage(editTask.getTaskMessage());
                 if (((Task)currentList.getItem(i))._done==1) {
-                    Button btDone = (Button) findViewById(R.id.doneButton);
-                    btDone.setBackgroundResource(android.R.drawable.checkbox_on_background);
+
                 }
             }
         }
