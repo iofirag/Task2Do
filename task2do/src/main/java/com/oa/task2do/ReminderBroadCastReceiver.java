@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Vibrator;
 
 /**
  * Created by joe on 24/11/13.
@@ -30,10 +29,12 @@ public class ReminderBroadCastReceiver extends BroadcastReceiver {
         Notification notification = new Notification(R.drawable.ic_launcher, "task2Do-"+notificationText , System.currentTimeMillis());
         notification.setLatestEventInfo( context,"Task2Do", notificationText, pendingIntent);
         notification.flags = Notification.FLAG_AUTO_CANCEL;
+        notification.defaults |= Notification.DEFAULT_SOUND;
+        notification.defaults |= Notification.DEFAULT_VIBRATE;
         notificationManager.notify(null, taskId, notification); //0 is id
 
-        // Vibrate the mobile phone
-        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        vibrator.vibrate(200);
+//        // Vibrate the mobile phone
+//        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+//        vibrator.vibrate(200);
     }
 }

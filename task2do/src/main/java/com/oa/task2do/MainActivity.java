@@ -20,6 +20,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -391,8 +392,18 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         Toast.makeText(MainActivity.this, "DONE : " + " " +
                 selectedTask.getTaskMessage(), Toast.LENGTH_LONG).show();
 
-        currentList.notifyDataSetChanged();
+        // maby do this in restore_from_db()
+        /* change button background */
+//        Button btDone = (Button) findViewById(R.id.doneButton);
+//        btDone.setBackgroundResource(android.R.drawable.checkbox_on_background);
+        ifEditTask = selectedTask._id;
 
+        selectedTask._done=1;
+        updateTaskInDb(selectedTask);
+        updateTaskInArray(selectedTask);
+        updateListView();   //check if needed
+
+        currentList.notifyDataSetChanged();
     }
     public void delete(View view) {
         ListView listView = (ListView) findViewById(R.id.listView);
@@ -429,6 +440,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
                 System.out.println("********************************USUAL*********************************************************");
                 System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
 
+                ifEditTask=nowUseAsId;
                 singleton.getInstance(this).getArrayList().add(0, task);
 
                 //-----continue checking from here -> to register date & cancel alarmManager after if click done
@@ -521,7 +533,12 @@ public class MainActivity extends FragmentActivity implements DialogListener {
             if (((Task)currentList.getItem(i)).getID()== ifEditTask)
             {
                 ((Task)currentList.getItem(i)).setTaskMessage(editTask.getTaskMessage());
+                if (((Task)currentList.getItem(i))._done==1) {
+                    Button btDone = (Button) findViewById(R.id.doneButton);
+                    btDone.setBackgroundResource(android.R.drawable.checkbox_on_background);
+                }
             }
+
         }
     }
 
