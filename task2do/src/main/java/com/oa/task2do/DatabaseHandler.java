@@ -155,6 +155,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // Update a single task
     public void updateTask(Task task) {
+                System.out.println( "Message="+task._taskMessage+"  --   done="+task._done);
         SQLiteDatabase db = this.getWritableDatabase();
          // The fields
         ContentValues con = new ContentValues();

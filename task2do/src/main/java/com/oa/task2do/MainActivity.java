@@ -304,6 +304,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
             //int isDone= task._done;
             //String str = new String( task.getTaskMessage() );
             singleton.getInstance(this).getArrayList().add(0,task);
+            System.out.println("task._message="+task._taskMessage+"  task._done="+task._done);
+            System.out.println();
         }
         updateListView();
     }
@@ -404,11 +406,17 @@ public class MainActivity extends FragmentActivity implements DialogListener {
         ifEditTask = selectedTask._id;
         selectedTask._done=1;
         updateTaskInDb(selectedTask);
+
+        //currentList.getItem(position).
+
         //restoreFromDb();
         //updateTaskInArray(selectedTask);
         //updateListView();   //check d
-        
+
         currentList.notifyDataSetChanged();
+
+        //initialize
+        ifEditTask = -1;
     }
     public void delete(View view) {
         ListView listView = (ListView) findViewById(R.id.listView);
