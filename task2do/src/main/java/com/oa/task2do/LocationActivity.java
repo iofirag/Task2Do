@@ -74,7 +74,9 @@ public class LocationActivity extends FragmentActivity {
         //bind to layout
         mLocationIn = (EditText) findViewById(R.id.location_input);
         mLocationOut = (TextView) findViewById(R.id.location_output);
-        mGeocoder = new Geocoder(this);
+        //Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        Locale lHebrew = new Locale("he");
+        mGeocoder = new Geocoder(this, lHebrew);
 
         //initialize the map object
         SupportMapFragment supportMapFragment =
@@ -116,9 +118,8 @@ public class LocationActivity extends FragmentActivity {
 
     private String getCompleteAddressString(double LATITUDE, double LONGITUDE) {
         String strAdd = "";
-        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
-            List<Address> addresses = geocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
+            List<Address> addresses = mGeocoder.getFromLocation(LATITUDE, LONGITUDE, 1);
             if (addresses != null) {
                 Address returnedAddress = addresses.get(0);
                 StringBuilder strReturnedAddress = new StringBuilder("");

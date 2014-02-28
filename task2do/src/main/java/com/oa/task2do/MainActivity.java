@@ -194,7 +194,7 @@ public class MainActivity extends FragmentActivity implements DialogListener {
             dataBundle.putInt("dateMonth", dateMonth);
             dataBundle.putInt("dateDay", dateDay);
             newFragment.setArguments(dataBundle);
-            System.out.println("save bundle----------"+dateDay+"."+dateMonth+"."+dateYear);
+            System.out.println("save bundle----------" + dateDay + "." + dateMonth + "." + dateYear);
         }
         newFragment.show(getFragmentManager(), "datePicker");
     }
@@ -301,7 +301,8 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     public void restoreFromDb(){
         List<Task> list = singleton.getInstance(this).getDb().getAllTasks();
         for(Task task : list){
-            String str = new String( task.getTaskMessage() );
+            //int isDone= task._done;
+            //String str = new String( task.getTaskMessage() );
             singleton.getInstance(this).getArrayList().add(0,task);
         }
         updateListView();
@@ -401,12 +402,12 @@ public class MainActivity extends FragmentActivity implements DialogListener {
 //        Button btDone = (Button) findViewById(R.id.doneButton);
 //        btDone.setBackgroundResource(android.R.drawable.checkbox_on_background);
         ifEditTask = selectedTask._id;
-
         selectedTask._done=1;
         updateTaskInDb(selectedTask);
-        updateTaskInArray(selectedTask);
-        updateListView();   //check if needed
-
+        //restoreFromDb();
+        //updateTaskInArray(selectedTask);
+        //updateListView();   //check d
+        
         currentList.notifyDataSetChanged();
     }
     public void delete(View view) {
@@ -542,7 +543,6 @@ public class MainActivity extends FragmentActivity implements DialogListener {
                     btDone.setBackgroundResource(android.R.drawable.checkbox_on_background);
                 }
             }
-
         }
     }
 
