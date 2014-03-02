@@ -306,6 +306,10 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         ListView lv = (ListView) findViewById(R.id.listView);
         TaskListBaseAdapter currentList = new TaskListBaseAdapter(this, singleton.getInstance(this).getArrayList());
         lv.setAdapter(currentList);
+//        for (int i=0; i<currentList.getCount();i++)
+//        {
+//            updateTaskInArray((Task)currentList.getItem(i));
+//        }
     }
 
     /* place all the details from the task in upper EditText and local variables that will send by intent to dialogs */
@@ -320,7 +324,6 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         ListView listView = (ListView) findViewById(R.id.listView);
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
-
 
         showEditAlert("EDIT", selectedTask.getTaskMessage(), view);
 
@@ -442,11 +445,8 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
                 System.out.println("********************************USUAL*********************************************************");
                 System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
 
-                ifEditTask=nowUseAsId;
-                singleton.getInstance(this).getArrayList().add(0, task);
+                ifEditTask=taskIdSelected=nowUseAsId;
 
-                //-----continue checking from here -> to register date & cancel alarmManager after if click done
-                saveToDb(task);
 
                 //create alarm from DATE+Time+ID details
                 // using alarmManager
@@ -465,8 +465,11 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
                     lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     setAlaramLocation(mapLatitude,mapLongitude,mapRadius);
                 }
+                singleton.getInstance(this).getArrayList().add(0, task);
 
-
+                //-----continue checking from here -> to register date & cancel alarmManager after if click done
+                saveToDb(task);
+                //updateTaskInArray(task);
             }
             else{
                 /* is in edit mode */
@@ -477,8 +480,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
                 Task editedTask = new Task(taskIdSelected, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude,hasAlarm,isDone);
                 System.out.println("********************************EDITED*********************************************************");
                 System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
-                updateTaskInDb(editedTask);
-                updateTaskInArray(editedTask);
+
                 if ((timeHour != -1 && timeMinute != -1 ) || (dateDay != -1 && dateMonth != -1 && dateYear != -1) ) {
                     hasAlarm=1;
                     editedTask.set_alarm(hasAlarm);
@@ -494,6 +496,8 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
                     lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
                     setAlaramLocation(mapLatitude,mapLongitude,mapRadius);
                 }
+                updateTaskInDb(editedTask);
+                updateTaskInArray(editedTask);
 
             }
             // initialize Task Message
@@ -534,12 +538,13 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
     public void updateTaskInArray(Task editTask){
         for (int i=0 ; i< currentList.getCount();i++)
         {
-            if (((Task)currentList.getItem(i)).getID()== taskIdSelected)
+            if (((Task)currentList.getItem(i)).getID() == taskIdSelected)
             {
                 ((Task)currentList.getItem(i)).setTaskMessage(editTask.getTaskMessage());
-                if (((Task)currentList.getItem(i))._done==1) {
-
-                }
+//                if (editTask.get_alarm()==1){
+//                    ImageView imageView= (ImageView)findViewById(R.id.alarmImage);
+//                    imageView.setVisibility(View.VISIBLE);
+//                }
             }
         }
     }
