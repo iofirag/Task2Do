@@ -65,8 +65,8 @@ public class LocationActivity extends FragmentActivity {
         setContentView(R.layout.location);
 
         try{
-                latitude = getIntent().getExtras().getDouble("mapLatitude");
-                longitude = getIntent().getExtras().getDouble("mapLongitude");
+            latitude = getIntent().getExtras().getDouble("mapLatitude");
+            longitude = getIntent().getExtras().getDouble("mapLongitude");
         }catch (Exception e){
             e.printStackTrace();
         }
