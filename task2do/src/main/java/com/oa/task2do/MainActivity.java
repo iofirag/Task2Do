@@ -118,6 +118,10 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
     @Override
     protected void onResume(){
         super.onResume();
+        currentList.setTaskDetailsArrayList(null);
+        /* If there is Tasks in the DataBase restore them */
+        if (singleton.getInstance(this).getArrayList().isEmpty())
+            restoreFromDb();
         updateListView();
         currentList.notifyDataSetChanged();
     }
@@ -503,7 +507,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
             // initialize Task Message
             description.setText("");
             initialize_variables();
-
+            currentList.notifyDataSetChanged();
             updateListView();
         }
     }
@@ -610,7 +614,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         // set dialog message
         alertDialogBuilder
                 .setMessage(message)
-                .setCancelable(false)
+                .setCancelable(true)
                 .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
                         // if this button is clicked, close
@@ -655,7 +659,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         // set dialog message
         alertDialogBuilder
                 .setMessage(message)
-                .setCancelable(false)
+                .setCancelable(true)
                 .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
                         // if this button is clicked, close
@@ -690,7 +694,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
 
                         ifEditTask=taskIdSelected;
                         //System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+message);
-                        currentList.notifyDataSetChanged();
+
 
                     }
                 })
@@ -710,6 +714,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         alertDialog.show();
 
     }
+
 
 
 }

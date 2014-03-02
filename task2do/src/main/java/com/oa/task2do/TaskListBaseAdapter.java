@@ -23,6 +23,10 @@ public class TaskListBaseAdapter extends BaseAdapter {
         l_Inflater = LayoutInflater.from(context);
     }
 
+    public void setTaskDetailsArrayList(ArrayList<Task> taskDetailsArrayList) {
+        TaskListBaseAdapter.taskDetailsArrayList = taskDetailsArrayList;
+    }
+
     public int getCount() {
         return taskDetailsArrayList.size();
     }
@@ -64,5 +68,10 @@ public class TaskListBaseAdapter extends BaseAdapter {
         holder.remindMessage.setText(taskDetailsArrayList.get(position).getTaskMessage());
 
         return convertView;
+    }
+
+
+    public ArrayList<Task> getTaskDetailsArrayList(){
+        return taskDetailsArrayList;
     }
 }
