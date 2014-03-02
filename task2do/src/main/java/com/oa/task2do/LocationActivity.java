@@ -196,6 +196,12 @@ public class LocationActivity extends FragmentActivity {
 
     public void locationSetButton (View v){
         Intent data = new Intent();
+
+                System.out.println("Location Activity:");
+                System.out.println("longitude="+longitude);
+                System.out.println("latitude="+latitude);
+                System.out.println("radius="+radius);
+
         //---set the data to pass back---
         data.putExtra("longitude", longitude);
         data.putExtra("latitude", latitude);

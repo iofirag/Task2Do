@@ -467,7 +467,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
                     isDone=0;
                     task.set_done(isDone);
                     lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    setAlaramLocation(mapLatitude,mapLongitude,mapRadius);
+                    setAlaramLocation(task, mapLatitude,mapLongitude,mapRadius);
                 }
                 singleton.getInstance(this).getArrayList().add(0, task);
 
@@ -498,7 +498,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
                     isDone=0;
                     editedTask.set_done(isDone);
                     lm=(LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                    setAlaramLocation(mapLatitude,mapLongitude,mapRadius);
+                    setAlaramLocation(editedTask, mapLatitude,mapLongitude,mapRadius);
                 }
                 updateTaskInDb(editedTask);
                 updateTaskInArray(editedTask);
@@ -507,7 +507,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
             // initialize Task Message
             description.setText("");
             initialize_variables();
-            currentList.notifyDataSetChanged();
+            //currentList.notifyDataSetChanged();
             updateListView();
         }
     }
@@ -554,21 +554,27 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
     }
 
     //Set Alaram Location func
-    public void setAlaramLocation(Double mapLatitude ,Double mapLongitude,double radius){
+    public void setAlaramLocation(Task task, Double mapLatitude ,Double mapLongitude,double radius){
         System.out.println("*********************LOCATION***************************");
+//                System.out.println("MainActivity:");
+//                System.out.println("mapLatitude="+mapLatitude);
+//                System.out.println("mapLongitude="+mapLongitude);
+//                System.out.println("radius="+radius);
+//                System.out.println("taskIdSelected="+taskIdSelected);
+//                System.out.println("ifEditTask="+ifEditTask);
+//                System.out.println("taskMessage="+currentList.getItemByID(taskIdSelected).getTaskMessage());
 
         // new intent
         Intent intent = new Intent();
         intent.setAction("com.oa.task2do.ReminderBroadCastReceiver");
         //intent.setAction("com.oa.task2do.LocationNotification");
-        intent.putExtra("taskMessage", currentList.getItemByID(taskIdSelected).getTaskMessage() );
-        intent.putExtra("taskId", currentList.getItemByID(taskIdSelected).getID());
-        intent.putExtra("codeLocation", Integer.toString(taskIdSelected));
+        intent.putExtra("taskMessage", task.getTaskMessage() );
+        intent.putExtra("taskId", task.getID());
+        intent.putExtra("codeLocation", Integer.toString(task.getID()));
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, currentList.getItemByID(taskIdSelected).getID(), intent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, task.getID(), intent, PendingIntent.FLAG_ONE_SHOT);
 
-        lm.addProximityAlert(mapLatitude, mapLongitude,mapRadius, -1, pendingIntent);
-
+        lm.addProximityAlert(mapLatitude, mapLongitude, mapRadius, -1, pendingIntent);
     }
     //radio button in location layout
     public int onRadioButtonClicked(View view) {
@@ -695,7 +701,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
                         ifEditTask=taskIdSelected;
                         //System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+message);
 
-
+                        currentList.notifyDataSetChanged();
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
