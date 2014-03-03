@@ -31,7 +31,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity implements DialogListener  {
+public class MainActivity extends FragmentActivity implements DialogListener   {
 
     Singleton singleton=null;
     private static final int EDIT_TASK = 1232;
@@ -66,6 +66,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
 
         /* avoid keyboard show automatic */
         ListView listView = (ListView) findViewById(R.id.listView);
+
         //close keyboard and set focusable false to etNetTask
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -118,8 +119,8 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
     @Override
     protected void onResume(){
         super.onResume();
-        currentList.setTaskDetailsArrayList(null);
         /* If there is Tasks in the DataBase restore them */
+        singleton.getInstance(this).clearArrayList();
         if (singleton.getInstance(this).getArrayList().isEmpty())
             restoreFromDb();
         updateListView();
@@ -159,7 +160,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         DialogFragment newFragment = new TimePickerFragment();
 
         // add details if user want to edit exist task
-        if (timeHour != -1 && timeMinute != -1){
+        if (timeHour != 0 && timeMinute != 0){
             Bundle dataBundle = new Bundle();
             dataBundle.putInt("timeHour", timeHour);
             dataBundle.putInt("timeMinute", timeMinute);
@@ -184,7 +185,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         DialogFragment newFragment = new DatePickerFragment();
 
         // add details if user want to edit exist task
-        if (dateYear != -1 && dateMonth != -1 && dateDay != -1){
+        if (dateYear != 0 && dateMonth != 0 && dateDay != 0){
             Bundle dataBundle = new Bundle();
             dataBundle.putInt("dateYear", dateYear);
             dataBundle.putInt("dateMonth", dateMonth);
@@ -200,7 +201,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         Intent intent = new Intent(this, LocationActivity.class);
 
         // add details if user want to edit task
-        if (mapLatitude != -1 && mapLongitude != -1){
+        if (mapLatitude != 0 && mapLongitude != 0){
             intent.putExtra("mapLatitude", mapLatitude);
             intent.putExtra("mapLongitude", mapLongitude);
             intent.putExtra("radius", mapRadius);
@@ -300,8 +301,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
             //int isDone= task._done;
             //String str = new String( task.getTaskMessage() );
             singleton.getInstance(this).getArrayList().add(0,task);
-            System.out.println("task._message="+task._taskMessage+"  task._done="+task._done);
-            System.out.println();
+            //System.out.println();
         }
         updateListView();
     }
@@ -329,7 +329,8 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
 
-        showEditAlert("EDIT", selectedTask.getTaskMessage(), view);
+
+        showEditAlert("EDIT", selectedTask, view);
 
         /* close keyboard and set focusable false to etNetTask */
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
@@ -406,7 +407,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         ifEditTask = taskIdSelected = selectedTask._id;
         selectedTask._done=1;
         updateTaskInDb(selectedTask);
-        updateTaskInArray(selectedTask);
+        //updateTaskInArray(selectedTask);
         updateListView();   //check d
         //restoreFromDb();
 
@@ -419,7 +420,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         int position = listView.getPositionForView(view);
         Task selectedTask = (Task) listView.getItemAtPosition(position);
         taskIdSelected=selectedTask.getID();
-        showDelteAlert("DELETE", selectedTask.getTaskMessage(), view);
+        showDeleteAlert("DELETE", selectedTask.getTaskMessage(), view);
 
     }
 
@@ -449,7 +450,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
                 System.out.println("********************************USUAL*********************************************************");
                 System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
 
-                ifEditTask=taskIdSelected=nowUseAsId;
+               taskIdSelected=nowUseAsId;
 
 
                 //create alarm from DATE+Time+ID details
@@ -501,7 +502,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
                     setAlaramLocation(editedTask, mapLatitude,mapLongitude,mapRadius);
                 }
                 updateTaskInDb(editedTask);
-                updateTaskInArray(editedTask);
+                updateTaskInArray(editedTask,view);
 
             }
             // initialize Task Message
@@ -539,16 +540,30 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
         singleton.getInstance(this).getDb().updateTask(editTask);
     }
 
-    public void updateTaskInArray(Task editTask){
+    public void updateTaskInArray(Task editTask,View convertView){
         for (int i=0 ; i< currentList.getCount();i++)
         {
             if (((Task)currentList.getItem(i)).getID() == taskIdSelected)
             {
                 ((Task)currentList.getItem(i)).setTaskMessage(editTask.getTaskMessage());
-//                if (editTask.get_alarm()==1){
-//                    ImageView imageView= (ImageView)findViewById(R.id.alarmImage);
-//                    imageView.setVisibility(View.VISIBLE);
-//                }
+                ((Task)currentList.getItem(i)).set_timeHour(editTask.get_timeHour());
+                ((Task)currentList.getItem(i)).set_timeMinute(editTask.get_timeMinute());
+                ((Task)currentList.getItem(i)).set_dateYear(editTask.get_dateYear());
+                ((Task)currentList.getItem(i)).set_dateMonth(editTask.get_dateMonth());
+                ((Task)currentList.getItem(i)).set_dateDay(editTask.get_dateDay());
+                ((Task)currentList.getItem(i)).set_mapLatitude(editTask.get_mapLatitude());
+                ((Task)currentList.getItem(i)).set_mapLongitude(editTask.get_mapLongitude());
+                ((Task)currentList.getItem(i)).set_alarm(editTask.get_alarm());
+                ((Task)currentList.getItem(i)).set_done(editTask.get_done());
+
+                if (editTask.get_alarm()==1){
+                    System.out.println("############## ALARM: "+ editTask.get_alarm() +"#######################");
+
+                }
+                if (editTask.get_done()==1){
+                    System.out.println("############## DONE: "+ editTask.get_done() +"#######################");
+
+                }
             }
         }
     }
@@ -608,7 +623,7 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
     }
 
     //display alert when task is deleted
-    public void showDelteAlert(String title, String message, final View view)
+    public void showDeleteAlert(String title, String message, final View view)
     {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -653,8 +668,9 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
     }
 
     //display alert when task is edit
-    public void showEditAlert(String title, String message, final View view)
+    public void showEditAlert(String title, Task selectedTask, final View view)
     {
+        taskIdSelected = selectedTask.get_id();
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 this);
@@ -664,38 +680,36 @@ public class MainActivity extends FragmentActivity implements DialogListener  {
 
         // set dialog message
         alertDialogBuilder
-                .setMessage(message)
+                .setMessage(selectedTask.getTaskMessage())
                 .setCancelable(true)
                 .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
                         // if this button is clicked, close
                         // current activity
-                        ListView listView = (ListView) findViewById(R.id.listView);
-                        int position = listView.getPositionForView(view);
-                        Task selectedTask = (Task) listView.getItemAtPosition(position);
+
 
                          /* load all variables from task (if have) to local variables (use in dialogs) */
-                        // ID
-                        taskIdSelected = selectedTask.get_id();
+                        //get task by ID
+                        Task selectedTask = (Task)Singleton.getInstance(getApplicationContext()).getDb().getTask(taskIdSelected);
                         // Message
                         EditText message = (EditText) findViewById(R.id.etNewTask);
                         message.setText( selectedTask._taskMessage );
                         // Location
-                        if (selectedTask._mapLongitude != 0 )
+                        if (selectedTask._mapLongitude != -1 )
                             mapLongitude = selectedTask._mapLongitude;
-                        if (selectedTask._mapLatitude != 0 )
+                        if (selectedTask._mapLatitude != -1 )
                             mapLatitude = selectedTask._mapLatitude;
                         // Date
-                        if (selectedTask._dateYear != 0 )
+                        if (selectedTask._dateYear != -1 )
                             dateYear = selectedTask._dateYear;
-                        if (selectedTask._dateMonth != 0 )
+                        if (selectedTask._dateMonth != -1 )
                             dateMonth = selectedTask._dateMonth;
-                        if (selectedTask._dateDay != 0 )
+                        if (selectedTask._dateDay != -1 )
                             dateDay = selectedTask._dateDay;
                         // Time
-                        if (selectedTask._timeHour != 0 )
+                        if (selectedTask._timeHour != -1 )
                             timeHour = selectedTask._timeHour;
-                        if (selectedTask._timeMinute != 0 )
+                        if (selectedTask._timeMinute != -1 )
                             timeMinute = selectedTask._timeMinute;
 
                         ifEditTask=taskIdSelected;

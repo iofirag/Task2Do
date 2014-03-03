@@ -12,11 +12,12 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        ImageView
+        <ImageView
             android:layout_width="54dp"
             android:layout_height="50dp"
             android:id="@+id/alarmImage"
-            android:visibility="invisible" />
+            android:visibility="visible"
+            android:background="@android:drawable/ic_popup_reminder" />
 
         <TextView
             android:layout_width="fill_parent"
