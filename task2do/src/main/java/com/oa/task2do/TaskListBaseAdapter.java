@@ -57,7 +57,14 @@ public class TaskListBaseAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = l_Inflater.inflate(R.layout.task_format, null);
+            //change layout by alarm param
+            if(taskDetailsArrayList.get(position).get_alarm()==1)
+                convertView = l_Inflater.inflate(R.layout.task_format_alert_inflate, null);
+            //change layout by done param
+            else if(taskDetailsArrayList.get(position).get_done()==1)
+                convertView = l_Inflater.inflate(R.layout.task_format_done_inflate, null);
+            else convertView = l_Inflater.inflate(R.layout.task_format, null);
+
             holder = new ViewHolder();
             holder.remindMessage = (TextView) convertView.findViewById(R.id.taskText);
             convertView.setTag(holder);
@@ -74,4 +81,5 @@ public class TaskListBaseAdapter extends BaseAdapter {
     public ArrayList<Task> getTaskDetailsArrayList(){
         return taskDetailsArrayList;
     }
+
 }

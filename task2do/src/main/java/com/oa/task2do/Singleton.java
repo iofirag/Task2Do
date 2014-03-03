@@ -39,5 +39,9 @@ public class Singleton {
     public DatabaseHandler getDb() {
         return db;
     }
+    public void clearArrayList()
+    {
+        results.clear();
+    }
 }
 

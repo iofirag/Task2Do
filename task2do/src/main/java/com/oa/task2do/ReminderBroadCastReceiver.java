@@ -33,7 +33,22 @@ public class ReminderBroadCastReceiver extends BroadcastReceiver {
         notification.defaults |= Notification.DEFAULT_VIBRATE;
         notificationManager.notify(null, taskId, notification); //0 is id
 
+        System.out.println("@@@@@@@@@@@@@@@@@ INTENT RECEIVED @@@@@@@@@@@@@@@@@@@");
+        Task t = Singleton.getInstance(context).getDb().getTask(taskId);
+        t.set_done(1);
+        t.set_alarm(0);
 
+        t.set_dateYear(-1);
+        t.set_dateMonth(-1);
+        t.set_dateDay(-1);
+
+        t.set_timeHour(-1);
+        t.set_timeMinute(-1);
+
+        t.set_mapLatitude(-1);
+        t.set_mapLongitude(-1);
+
+        Singleton.getInstance(context).getDb().updateTask(t);
 //        // Vibrate the mobile phone
 //        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 //        vibrator.vibrate(200);

@@ -38,7 +38,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_LOCATION_LATITUDE = "latitude";
     private static final String KEY_ALARM = "alarm";
     private static final String KEY_DONE = "done";
-
+    private static final String[] COLUMNS = {KEY_ID,KEY_MESSAGE};
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -71,7 +71,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TASKS);
 
         // Create tables again
-        onCreate(db);
+        this.onCreate(db);
     }
 
     /**
@@ -86,6 +86,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         /*
          * save task Message, Date(year+month+day), Time(Hour+Time), Location(Longitude+Latitude)
          * */
+
+        values.put(KEY_ID, task._id);
         values.put(KEY_MESSAGE, task._taskMessage);
         values.put(KEY_DATE_YEAR, task._dateYear);
         values.put(KEY_DATE_MONTH, task._dateMonth);
@@ -103,21 +105,43 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-//    // Getting single task
-//    Task getTask(int id) {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//
-//        Cursor cursor = db.query(TABLE_TASKS, new String[] { KEY_ID,
-//                KEY_MESSAGE }, KEY_ID + "=?",
-//                new String[] { String.valueOf(id) }, null, null, null, null);
-//        if (cursor != null)
-//            cursor.moveToFirst();
-//
-//        Task task = new Task(Integer.parseInt(cursor.getString(0)),
-//                cursor.getString(1) );
-//        // return contact
-//        return task;
-//    }
+    public Task getTask(int id){
+
+        // 1. get reference to readable DB
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor =  db.rawQuery("select * from " + TABLE_TASKS + " where " + id + "=" + KEY_ID, null);
+        // 2. build query
+//        Cursor cursor =
+//                db.query(TABLE_TASKS, // a. table
+//                        COLUMNS, // b. column names
+//                        " id = ?", // c. selections
+//                        new String[] { String.valueOf(id) }, // d. selections args
+//                        null, // e. group by
+//                        null, // f. having
+//                        null, // g. order by
+//                        null); // h. limit
+
+        // 3. if we got results get the first one
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        // 4. build task object
+        Task task = new Task();
+        task.setID(Integer.parseInt(cursor.getString(0)));
+        task.setTaskMessage(cursor.getString(1));
+        task.set_dateYear(Integer.parseInt(cursor.getString(2)));
+        task.set_dateMonth(Integer.parseInt(cursor.getString(3)));
+        task.set_dateDay(Integer.parseInt(cursor.getString(4)));
+        task.set_timeHour(Integer.parseInt(cursor.getString(5)));
+        task.set_timeMinute(Integer.parseInt(cursor.getString(6)));
+        task.set_mapLongitude(Integer.parseInt(cursor.getString(7)));
+        task.set_mapLatitude(Integer.parseInt(cursor.getString(8)));
+        task.set_alarm(Integer.parseInt(cursor.getString(9)));
+        task.set_done(Integer.parseInt(cursor.getString(10)));
+        // 5. return task
+        return task;
+    }
 
 
     // Getting All Tasks
@@ -135,6 +159,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 Task task = new Task();
                 task.setID(Integer.parseInt(cursor.getString(0)));
                 task.setTaskMessage(cursor.getString(1));
+                task.set_dateYear(Integer.parseInt(cursor.getString(2)));
+                task.set_dateMonth(Integer.parseInt(cursor.getString(3)));
+                task.set_dateDay(Integer.parseInt(cursor.getString(4)));
+                task.set_timeHour(Integer.parseInt(cursor.getString(5)));
+                task.set_timeMinute(Integer.parseInt(cursor.getString(6)));
+                task.set_mapLongitude(Integer.parseInt(cursor.getString(7)));
+                task.set_mapLatitude(Integer.parseInt(cursor.getString(8)));
+                task.set_alarm(Integer.parseInt(cursor.getString(9)));
+                task.set_done(Integer.parseInt(cursor.getString(10)));
                 // Adding task to list
                 taskList.add(task);
             } while (cursor.moveToNext());
@@ -155,10 +188,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     // Update a single task
     public void updateTask(Task task) {
-                System.out.println( "Message="+task._taskMessage+"  --   done="+task._done);
         SQLiteDatabase db = this.getWritableDatabase();
          // The fields
         ContentValues con = new ContentValues();
+        con.put(KEY_ID, task.get_id());
         con.put(KEY_MESSAGE, task._taskMessage);
         con.put(KEY_DATE_YEAR, task._dateYear);
         con.put(KEY_DATE_MONTH, task._dateMonth);
@@ -170,7 +203,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         con.put(KEY_ALARM, task._alarm);
         con.put(KEY_DONE, task._done);
 
-        db.update(TABLE_TASKS, con, KEY_ID + " = ?",
+        db.update(TABLE_TASKS, con, KEY_ID +" = ?",
                 new String[] { String.valueOf(task.getID()) });
         db.close();
     }

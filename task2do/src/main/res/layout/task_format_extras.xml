@@ -13,10 +13,10 @@
         android:orientation="horizontal">
 
         ImageView
-            android:layout_width="54dp"
-            android:layout_height="50dp"
-            android:id="@+id/alarmImage"
-            android:visibility="invisible" />
+        android:layout_width="54dp"
+        android:layout_height="50dp"
+        android:id="@+id/alarmImage"
+        android:visibility="invisible" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -59,7 +59,7 @@
         android:gravity="center"
         android:weightSum="1"
         android:id="@+id/listViewExtraOptions"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <ImageButton
             android:layout_width="wrap_content"
