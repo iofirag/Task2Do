@@ -135,8 +135,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         task.set_dateDay(Integer.parseInt(cursor.getString(4)));
         task.set_timeHour(Integer.parseInt(cursor.getString(5)));
         task.set_timeMinute(Integer.parseInt(cursor.getString(6)));
-        task.set_mapLongitude(Integer.parseInt(cursor.getString(7)));
-        task.set_mapLatitude(Integer.parseInt(cursor.getString(8)));
+        task.set_mapLongitude(Double.parseDouble(cursor.getString(7)));
+        task.set_mapLatitude(Double.parseDouble(cursor.getString(8)));
         task.set_alarm(Integer.parseInt(cursor.getString(9)));
         task.set_done(Integer.parseInt(cursor.getString(10)));
         // 5. return task
@@ -164,8 +164,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 task.set_dateDay(Integer.parseInt(cursor.getString(4)));
                 task.set_timeHour(Integer.parseInt(cursor.getString(5)));
                 task.set_timeMinute(Integer.parseInt(cursor.getString(6)));
-                task.set_mapLongitude(Integer.parseInt(cursor.getString(7)));
-                task.set_mapLatitude(Integer.parseInt(cursor.getString(8)));
+                task.set_mapLongitude(Double.parseDouble(cursor.getString(7)));
+                task.set_mapLatitude(Double.parseDouble(cursor.getString(8)));
                 task.set_alarm(Integer.parseInt(cursor.getString(9)));
                 task.set_done(Integer.parseInt(cursor.getString(10)));
                 // Adding task to list
