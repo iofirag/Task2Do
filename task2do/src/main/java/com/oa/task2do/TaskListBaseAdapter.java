@@ -17,7 +17,7 @@ public class TaskListBaseAdapter extends BaseAdapter {
 
     private static ArrayList<Task> taskDetailsArrayList;
     private LayoutInflater l_Inflater;
-
+    private static int ifEditTask=-1;
     public TaskListBaseAdapter(Context context, ArrayList<Task> results) {
         taskDetailsArrayList = results;
         l_Inflater = LayoutInflater.from(context);
@@ -63,6 +63,8 @@ public class TaskListBaseAdapter extends BaseAdapter {
             //change layout by done param
             else if(taskDetailsArrayList.get(position).get_done()==1)
                 convertView = l_Inflater.inflate(R.layout.task_format_done_inflate, null);
+            else if (taskDetailsArrayList.get(position).getID() == ifEditTask)
+                convertView = l_Inflater.inflate(R.layout.task_format_extras, null);
             else convertView = l_Inflater.inflate(R.layout.task_format, null);
 
             holder = new ViewHolder();
@@ -80,6 +82,17 @@ public class TaskListBaseAdapter extends BaseAdapter {
 
     public ArrayList<Task> getTaskDetailsArrayList(){
         return taskDetailsArrayList;
+    }
+
+    public void info_IfEditTask(int edit){
+        if (this.ifEditTask == edit){
+            edit=-1;
+        }
+        this.ifEditTask=edit;
+    }
+
+    public void remove (int position){
+        System.out.println("///////////////////// WTF //////////////////////");
     }
 
 }

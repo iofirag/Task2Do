@@ -35,13 +35,14 @@
             android:id="@+id/removeTaskButton"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/abc_ic_clear_search_api_holo_light"
+            android:background="@drawable/abc_ic_cab_done_holo_light"
             android:layout_alignBottom="@+id/taskText"
             android:lines="1"
             android:layout_toRightOf="@+id/taskText"
             android:onClick="delete"
             android:clickable="true"
-            android:layout_weight="0.04" />
+            android:layout_weight="0.04"
+            android:textColorLink="@color/darkblue" />
     </LinearLayout>
 
 
