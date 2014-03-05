@@ -41,7 +41,8 @@
             android:layout_toRightOf="@+id/taskText"
             android:onClick="delete"
             android:clickable="true"
-            android:layout_weight="0.04" />
+            android:layout_weight="0.04"
+            android:textColorLink="@color/darkblue" />
     </LinearLayout>
 
 

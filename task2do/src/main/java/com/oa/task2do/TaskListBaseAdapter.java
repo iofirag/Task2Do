@@ -84,8 +84,15 @@ public class TaskListBaseAdapter extends BaseAdapter {
         return taskDetailsArrayList;
     }
 
-    public void getIfEditTask(int edit){
+    public void info_IfEditTask(int edit){
+        if (this.ifEditTask == edit){
+            edit=-1;
+        }
         this.ifEditTask=edit;
+    }
+
+    public void remove (int position){
+        System.out.println("///////////////////// WTF //////////////////////");
     }
 
 }
