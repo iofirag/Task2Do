@@ -18,6 +18,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -172,10 +173,7 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
     //show alert dialog
     public void alertDialog(View v) {
         DialogFragment newFragment = new com.oa.task2do.AlertDialog();
-
         // add details if user want to edit exist task
-
-
         newFragment.show(getFragmentManager(), "alertPicker");
     }
 
@@ -310,10 +308,6 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
         ListView lv = (ListView) findViewById(R.id.listView);
         TaskListBaseAdapter currentList = new TaskListBaseAdapter(this, singleton.getInstance(this).getArrayList());
         lv.setAdapter(currentList);
-//        for (int i=0; i<currentList.getCount();i++)
-//        {
-//            updateTaskInArray((Task)currentList.getItem(i));
-//        }
     }
 
     /* place all the details from the task in upper EditText and local variables that will send by intent to dialogs */
@@ -505,6 +499,7 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
                 updateTaskInArray(editedTask,view);
 
             }
+            currentList.getIfEditTask(-1);
             // initialize Task Message
             description.setText("");
             initialize_variables();
@@ -687,10 +682,14 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
                         // if this button is clicked, close
                         // current activity
 
-
                          /* load all variables from task (if have) to local variables (use in dialogs) */
                         //get task by ID
                         Task selectedTask = (Task)Singleton.getInstance(getApplicationContext()).getDb().getTask(taskIdSelected);
+                        currentList.getIfEditTask(selectedTask.getID());
+                        updateListView();
+                        //change list view height for the inflate
+                        ListView list = (ListView) findViewById(R.id.listView);
+                        list.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,getWallpaperDesiredMinimumHeight() ) );
                         // Message
                         EditText message = (EditText) findViewById(R.id.etNewTask);
                         message.setText( selectedTask._taskMessage );

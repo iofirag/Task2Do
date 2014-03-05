@@ -10,7 +10,8 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="1">
 
         ImageView
         android:layout_width="54dp"
@@ -23,7 +24,7 @@
             android:layout_height="fill_parent"
             android:id="@+id/taskText"
             android:lines="1"
-            android:layout_alignBottom="@+id/removeTaskButton"
+            android:layout_alignBottom="@+id/saveTaskButton"
             android:clickable="true"
             android:onClick="editTask"
             android:focusableInTouchMode="false"
@@ -35,37 +36,37 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:id="@+id/removeTaskButton"
+            android:id="@+id/saveTaskButton"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/abc_ic_clear_search_api_holo_light"
+            android:background="@drawable/abc_ic_cab_done_holo_light"
             android:layout_alignBottom="@+id/taskText"
             android:lines="1"
             android:layout_toRightOf="@+id/taskText"
-            android:onClick="delete"
+            android:onClick="saveTask"
             android:clickable="true"
             android:layout_weight="0.04" />
     </LinearLayout>
 
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="53dp"
+        android:layout_height="67dp"
         android:layout_gravity="center_horizontal"
         android:baselineAligned="false"
         android:measureWithLargestChild="false"
         android:textAlignment="center"
         android:gravity="center"
-        android:weightSum="1"
-        android:id="@+id/listViewExtraOptions"
-        android:visibility="visible">
+        android:id="@+id/linearLayout"
+        android:onClick="show"
+        android:weightSum="1">
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ibtAlarm_editTask"
-            android:background="@android:drawable/ic_menu_recent_history" />
+            android:id="@+id/ibtAlarm_newTask"
+            android:background="@android:drawable/ic_menu_recent_history"
+            android:onClick="showTimePickerDialog" />
 
         <TableLayout
             android:layout_width="53dp"
@@ -75,8 +76,9 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ibtDate_editTask"
-            android:background="@android:drawable/ic_menu_today" />
+            android:id="@+id/ibtDate_newTask"
+            android:background="@android:drawable/ic_menu_today"
+            android:onClick="showDatePickerDialog" />
 
         <TableLayout
             android:layout_width="62dp"
@@ -86,8 +88,10 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ibtLocation_editTask"
-            android:background="@android:drawable/ic_dialog_map" />
+            android:id="@+id/ibtLocation_newTask"
+            android:background="@android:drawable/ic_dialog_map"
+            android:onClick="showLocationDialog"
+            android:visibility="visible" />
 
         <TableLayout
             android:layout_width="61dp"
@@ -97,8 +101,10 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/ibtTextEdit_editTask"
-            android:background="@android:drawable/ic_btn_speak_now" />
+            android:id="@+id/ibtVoice_newTask"
+            android:background="@android:drawable/ic_menu_edit"
+            android:onClick="showVoiceDialog" />
     </LinearLayout>
+
 
 </LinearLayout>
