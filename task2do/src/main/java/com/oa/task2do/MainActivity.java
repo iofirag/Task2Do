@@ -350,9 +350,7 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
         //change list view height for the inflate
         ListView list = (ListView) findViewById(R.id.listView);
         list.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,getWallpaperDesiredMinimumHeight() ) );
-        // Message
-        EditText message = (EditText) findViewById(R.id.etNewTask);
-        message.setText( selectedTask.getTaskMessage() );
+
         // Location
         if (selectedTask._mapLongitude != -1 )
             mapLongitude = selectedTask._mapLongitude;
@@ -388,6 +386,11 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
         imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
     }
 
+    public void editTaskText (View view){
+        // Message
+        EditText message = (EditText) findViewById(R.id.etNewTask);
+        message.setText(currentList.getItemByID(taskIdSelected).getTaskMessage() );
+    }
 
     // if user check the dateButton
     private void createAlarmAtDate(Task task){
@@ -455,7 +458,7 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
 //        Button btDone = (Button) findViewById(R.id.doneButton);
 //        btDone.setBackgroundResource(android.R.drawable.checkbox_on_background);
         ifEditTask = taskIdSelected = selectedTask.getID();
-        selectedTask._done=1;
+        selectedTask.set_done(1);
         updateTaskInDb(selectedTask);
         //updateTaskInArray(selectedTask);
         updateListView();   //check d
