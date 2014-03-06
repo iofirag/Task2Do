@@ -13,7 +13,8 @@
         android:layout_width="fill_parent"
         android:layout_height="62dp"
         android:id="@+id/newTaskLine_button"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:background="#ffffff">
 
         <EditText
             android:layout_width="wrap_content"
@@ -49,7 +50,8 @@
         android:weightSum="1"
         android:id="@+id/extraOptions"
         android:visibility="gone"
-        android:onClick="show">
+        android:onClick="show"
+        android:background="#ffffff">
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -103,6 +105,7 @@
         android:clickable="true"
         android:longClickable="true"
         android:stackFromBottom="false"
-        android:paddingTop="5pt" />
+        android:paddingTop="5pt"
+        android:layout_marginLeft="10dp" />
 
 </LinearLayout>

@@ -39,7 +39,7 @@
             android:id="@+id/saveTaskButton"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/abc_ic_cab_done_holo_light"
+            android:background="@android:drawable/ic_input_add"
             android:layout_alignBottom="@+id/taskText"
             android:lines="1"
             android:layout_toRightOf="@+id/taskText"
@@ -60,7 +60,8 @@
         android:gravity="center"
         android:id="@+id/linearLayout"
         android:onClick="show"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:background="#d3ffff">
 
         <ImageButton
             android:layout_width="wrap_content"

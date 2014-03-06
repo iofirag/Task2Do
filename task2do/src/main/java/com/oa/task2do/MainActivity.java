@@ -116,18 +116,21 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
         et.addTextChangedListener(tw);
 
         //swipe listener
-        SwipeDismissListViewTouchListener touchListener =
-                 new SwipeDismissListViewTouchListener(
-                                 listView,
-                         new SwipeDismissListViewTouchListener.OnDismissCallback() {
+        SwipeDismissListViewTouchListener touchListener = new SwipeDismissListViewTouchListener(listView,
+                new SwipeDismissListViewTouchListener.OnDismissCallback() {
                                  public void onDismiss(ListView listView, int[] reverseSortedPositions) {
                                          for (int position : reverseSortedPositions) {
                                              //currentList.remove(currentList.getItem(position));
                                              int id=((Task)currentList.getItem(position)).getID();
                                              currentList.remove(position);
                                              Task t = currentList.getItemByID(id);
-                                             t.set_done(1);
+                                             if (t.get_done()==1){
+                                                 DeleteFromDb(t, position);
+                                             }
+                                             else t.set_done(1);
+
                                              updateTaskInDb(t);
+
                                              //updateTaskInArray(t,this.onDismiss());
                                              updateListView();
                                             }
@@ -532,9 +535,11 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
             else{
                 /* is in edit mode */
                 // try to update this task in DB
-
+                String taskMessage;
                 /* Text Message */
-                String taskMessage = description.getText().toString();
+                if (description.getText().length()<1)
+                     taskMessage = currentList.getItemByID(taskIdSelected).getTaskMessage();
+                else taskMessage = description.getText().toString();
                 Task editedTask = new Task(taskIdSelected, taskMessage, dateYear, dateMonth, dateDay, timeHour, timeMinute, mapLongitude, mapLatitude,hasAlarm,isDone);
                 System.out.println("********************************EDITED*********************************************************");
                 System.out.println(timeHour+":"+timeMinute+" "+dateDay+"/"+dateMonth+"/"+dateYear+" ("+mapLongitude+","+mapLatitude+") -- "+taskMessage);
