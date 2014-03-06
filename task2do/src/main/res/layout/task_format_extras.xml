@@ -104,7 +104,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/ibtVoice_newTask"
             android:background="@android:drawable/ic_menu_edit"
-            android:onClick="showVoiceDialog" />
+            android:onClick="editTaskText" />
     </LinearLayout>
 
 
