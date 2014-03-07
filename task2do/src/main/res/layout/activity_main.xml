@@ -18,14 +18,13 @@
 
         <EditText
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="fill_parent"
             android:id="@+id/etNewTask"
             android:layout_weight="0.98"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:hint="Enter new task here"
             android:enabled="true"
-            android:lines="1"
             android:clickable="false" />
 
         <Button
@@ -99,7 +98,7 @@
 
     <ListView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/listView"
         android:choiceMode="singleChoice"
         android:clickable="true"

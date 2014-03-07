@@ -86,10 +86,11 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
             public void onClick(View v) {
                 if (((InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE)).isActive()) {
                     LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
-                    if (linearLayout.getVisibility()== View.VISIBLE ){
+                    if (linearLayout.getVisibility()== View.VISIBLE){
                         linearLayout.setVisibility(LinearLayout.GONE);
                     }
-                    else linearLayout.setVisibility(LinearLayout.VISIBLE);
+                    else if (currentList.get_info_ifEditText()==-1) linearLayout.setVisibility(LinearLayout.VISIBLE);
+                    else if (currentList.get_info_ifEditText()==-1) linearLayout.setVisibility(LinearLayout.GONE);
                 }
             }
         });
@@ -99,7 +100,7 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
         tw = new TextWatcher() {
             LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
             public void afterTextChanged(Editable s){
-                if (s.length()>0)
+                if (s.length()>0 && currentList.get_info_ifEditText()==-1)
                     linearLayout.setVisibility(LinearLayout.VISIBLE);
                 else linearLayout.setVisibility(LinearLayout.GONE);
             }
@@ -166,6 +167,8 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
                     } else {
                         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.extraOptions);
                         linearLayout.setVisibility(LinearLayout.GONE);
+                        if (currentList.get_info_ifEditText()==-1) ifEditTask=-1;
+                        updateListView();
                         Toast.makeText(getApplicationContext(), "Press again to exit.",
                                 Toast.LENGTH_SHORT).show();
                         lastPressedTime = event.getEventTime();

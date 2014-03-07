@@ -19,6 +19,13 @@
         android:id="@+id/alarmImage"
         android:visibility="invisible" />
 
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="50dp"
+            android:id="@+id/imageView"
+            android:visibility="visible"
+            android:background="@android:drawable/ic_popup_reminder" />
+
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
