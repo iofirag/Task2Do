@@ -62,7 +62,7 @@ public class TaskListBaseAdapter extends BaseAdapter {
                 convertView = l_Inflater.inflate(R.layout.task_format_extras_alarm, null);
             else if(taskDetailsArrayList.get(position).get_alarm()==1)
                 convertView = l_Inflater.inflate(R.layout.task_format_alert_inflate, null);
-            else if(taskDetailsArrayList.get(position).get_done()==1 && taskDetailsArrayList.get(position).getID() != ifEditTask)
+            else if(taskDetailsArrayList.get(position).getID() != ifEditTask && taskDetailsArrayList.get(position).get_done()==1 )
                 convertView = l_Inflater.inflate(R.layout.task_format_done_inflate, null);
             else if (taskDetailsArrayList.get(position).getID() == ifEditTask)
                 convertView = l_Inflater.inflate(R.layout.task_format_extras, null);
