@@ -4,6 +4,9 @@
     <string name="app_name">Task 2Do</string>
     <string name="enter_location">Enter location</string>
     <string name="action_settings">Settings</string>
+    <string name="share_whatsapp">Share via WhatsApp</string>
     <string name="title_activity_location">Location</string>
+    <string name="invite_friends_via">Invite friends via</string>
+    <string name="invite_friends">Invite friends</string>
 
 </resources>

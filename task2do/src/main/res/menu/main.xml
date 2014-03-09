@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.oa.task2do.MainActivity" >
     
-    <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+    <item android:id="@+id/invite_friends"
+        android:title="@string/invite_friends"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>

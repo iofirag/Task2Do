@@ -17,6 +17,9 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -801,6 +804,35 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
 //
 //    }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.invite_friends:
+                invite_friends();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
-
+    public void invite_friends(){
+        String shareBody = "Check out Task 2Do,\ndownload it at https://play.google.com/store/apps/details?id=com.oa.task2do\n(by Ofir Aghai & Avishay Hajbi)";
+        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+        if (sharingIntent != null) {
+            sharingIntent.setType("text/plain");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Task 2Do");
+            sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+            startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.invite_friends_via)));
+        } else {
+            Toast.makeText(this, "You don't have any sharing app.", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
 }
