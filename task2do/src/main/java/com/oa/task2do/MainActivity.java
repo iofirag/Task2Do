@@ -92,7 +92,11 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
                     if (linearLayout.getVisibility()== View.VISIBLE){
                         linearLayout.setVisibility(LinearLayout.GONE);
                     }
-                    else if (currentList.get_info_ifEditText()==-1) linearLayout.setVisibility(LinearLayout.VISIBLE);
+                    else if (currentList.get_info_ifEditText()==-1){
+                        linearLayout.setVisibility(LinearLayout.VISIBLE);
+                        //to change the variables if i canceled selected item
+                        initialize_variables();
+                    }
                     else if (currentList.get_info_ifEditText()==-1) linearLayout.setVisibility(LinearLayout.GONE);
                 }
             }
@@ -131,7 +135,10 @@ public class MainActivity extends FragmentActivity implements DialogListener   {
                                              if (t.get_done()==1){
                                                  DeleteFromDb(t, position);
                                              }
-                                             else t.set_done(1);
+                                             else {
+                                                 t.set_alarm(0);
+                                                 t.set_done(1);
+                                             }
 
                                              updateTaskInDb(t);
 
