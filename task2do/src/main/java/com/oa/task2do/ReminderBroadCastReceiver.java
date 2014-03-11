@@ -13,10 +13,10 @@ import android.content.Intent;
 public class ReminderBroadCastReceiver extends BroadcastReceiver {
 
 
-    public void	onReceive(Context context,	Intent intent)	{
-                                System.out.println("BroadcastReceiver: onRecive()");
+    public void onReceive(Context context, Intent intent) {
+        System.out.println("BroadcastReceiver: onRecive()");
 
-        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Get taskId & message
         int taskId = intent.getIntExtra("taskId", 0);
@@ -26,8 +26,8 @@ public class ReminderBroadCastReceiver extends BroadcastReceiver {
         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, myIntent, 0);
 
-        Notification notification = new Notification(R.drawable.ic_launcher, "task2Do-"+notificationText , System.currentTimeMillis());
-        notification.setLatestEventInfo( context,"Task2Do", notificationText, pendingIntent);
+        Notification notification = new Notification(R.drawable.ic_launcher, "task2Do-" + notificationText, System.currentTimeMillis());
+        notification.setLatestEventInfo(context, "Task2Do", notificationText, pendingIntent);
         notification.flags = Notification.FLAG_AUTO_CANCEL;
         notification.defaults |= Notification.DEFAULT_SOUND;
         notification.defaults |= Notification.DEFAULT_VIBRATE;

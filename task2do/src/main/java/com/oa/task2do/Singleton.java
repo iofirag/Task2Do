@@ -21,7 +21,7 @@ public class Singleton {
     }
 
     public static synchronized Singleton getInstance(Context context) {
-        if(instance == null) {
+        if (instance == null) {
             instance = new Singleton(context);
         }
         return instance;
@@ -33,14 +33,16 @@ public class Singleton {
     public void setArrayList(ArrayList<Task> results) {
         this.results = results;
     }
-    public ArrayList<Task> getArrayList(){
+
+    public ArrayList<Task> getArrayList() {
         return results;
     }
+
     public DatabaseHandler getDb() {
         return db;
     }
-    public void clearArrayList()
-    {
+
+    public void clearArrayList() {
         results.clear();
     }
 }

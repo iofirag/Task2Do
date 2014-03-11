@@ -17,7 +17,8 @@ public class TaskListBaseAdapter extends BaseAdapter {
 
     private static ArrayList<Task> taskDetailsArrayList;
     private LayoutInflater l_Inflater;
-    private static int ifEditTask=-1;
+    private static int ifEditTask = -1;
+
     public TaskListBaseAdapter(Context context, ArrayList<Task> results) {
         taskDetailsArrayList = results;
         l_Inflater = LayoutInflater.from(context);
@@ -41,9 +42,9 @@ public class TaskListBaseAdapter extends BaseAdapter {
     }
 
     public Task getItemByID(long id) {
-        for(Iterator<Task> i = taskDetailsArrayList.iterator(); i.hasNext(); ) {
+        for (Iterator<Task> i = taskDetailsArrayList.iterator(); i.hasNext(); ) {
             Task item = i.next();
-            if (item.getID() == (int)id ){
+            if (item.getID() == (int) id) {
                 return item;
             }
         }
@@ -58,11 +59,11 @@ public class TaskListBaseAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             //change layout by alarm param
-            if (taskDetailsArrayList.get(position).getID() == ifEditTask && taskDetailsArrayList.get(position).get_alarm()==1)
+            if (taskDetailsArrayList.get(position).getID() == ifEditTask && taskDetailsArrayList.get(position).get_alarm() == 1)
                 convertView = l_Inflater.inflate(R.layout.task_format_extras_alarm, null);
-            else if(taskDetailsArrayList.get(position).get_alarm()==1)
+            else if (taskDetailsArrayList.get(position).get_alarm() == 1)
                 convertView = l_Inflater.inflate(R.layout.task_format_alert_inflate, null);
-            else if(taskDetailsArrayList.get(position).getID() != ifEditTask && taskDetailsArrayList.get(position).get_done()==1 )
+            else if (taskDetailsArrayList.get(position).getID() != ifEditTask && taskDetailsArrayList.get(position).get_done() == 1)
                 convertView = l_Inflater.inflate(R.layout.task_format_done_inflate, null);
             else if (taskDetailsArrayList.get(position).getID() == ifEditTask)
                 convertView = l_Inflater.inflate(R.layout.task_format_extras, null);
@@ -81,21 +82,22 @@ public class TaskListBaseAdapter extends BaseAdapter {
     }
 
 
-    public ArrayList<Task> getTaskDetailsArrayList(){
+    public ArrayList<Task> getTaskDetailsArrayList() {
         return taskDetailsArrayList;
     }
 
-    public void info_IfEditTask(int edit){
-        if (this.ifEditTask == edit){
-            edit=-1;
+    public void info_IfEditTask(int edit) {
+        if (this.ifEditTask == edit) {
+            edit = -1;
         }
-        this.ifEditTask=edit;
+        this.ifEditTask = edit;
     }
-    public int get_info_ifEditText(){
+
+    public int get_info_ifEditText() {
         return ifEditTask;
     }
 
-    public void remove (int position){
+    public void remove(int position) {
         System.out.println("///////////////////// WTF //////////////////////");
     }
 

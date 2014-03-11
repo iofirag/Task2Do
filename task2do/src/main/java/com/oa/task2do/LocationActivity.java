@@ -38,9 +38,9 @@ public class LocationActivity extends FragmentActivity {
     private GoogleMap mGoogleMap = null;
     private Marker marker = null;
 
-    private double longitude =-1.;
-    private double latitude =-1.;
-    private int radius =500;
+    private double longitude = -1.;
+    private double latitude = -1.;
+    private int radius = 500;
 
 
     /**
@@ -51,6 +51,7 @@ public class LocationActivity extends FragmentActivity {
         super.onStart();
         EasyTracker.getInstance().activityStart(this);
     }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -58,61 +59,69 @@ public class LocationActivity extends FragmentActivity {
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.location);
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.location);
 
-        try{
-            latitude = getIntent().getExtras().getDouble("mapLatitude");
-            longitude = getIntent().getExtras().getDouble("mapLongitude");
-        }catch (Exception e){
+            try {
+                latitude = getIntent().getExtras().getDouble("mapLatitude");
+                longitude = getIntent().getExtras().getDouble("mapLongitude");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            //bind to layout
+            mLocationIn = (EditText) findViewById(R.id.location_input);
+            mLocationOut = (TextView) findViewById(R.id.location_output);
+            //Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            Locale lHebrew = new Locale("he");
+            mGeocoder = new Geocoder(this, lHebrew);
+
+            //initialize the map object
+            SupportMapFragment supportMapFragment =
+                    (SupportMapFragment) getSupportFragmentManager().findFragmentByTag("mapFragment");
+
+            mGoogleMap = supportMapFragment.getMap();
+            if (mGoogleMap != null) {
+                //map available
+                mGoogleMap.setMyLocationEnabled(true);
+            }
+
+            mLocationIn.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                        lookUp(mLocationIn.getText().toString());
+                    }
+                    return false;
+                }
+            });
+
+            showLocationIfExist();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-        //bind to layout
-        mLocationIn = (EditText) findViewById(R.id.location_input);
-        mLocationOut = (TextView) findViewById(R.id.location_output);
-        //Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-        Locale lHebrew = new Locale("he");
-        mGeocoder = new Geocoder(this, lHebrew);
-
-        //initialize the map object
-        SupportMapFragment supportMapFragment =
-                (SupportMapFragment)getSupportFragmentManager().findFragmentByTag("mapFragment");
-
-        mGoogleMap = supportMapFragment.getMap();
-        if (mGoogleMap!=null) {
-            //map available
-            mGoogleMap.setMyLocationEnabled(true);
-        }
-
-        mLocationIn.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    lookUp(mLocationIn.getText().toString());
-                }
-                return false;
-            }
-        });
-
-        showLocationIfExist();
     }
 
-    public void showLocationIfExist(){
-        if (latitude!= -1. && longitude!= -1. ){
-            EditText etLocationInput = (EditText) findViewById(R.id.location_input);
+    public void showLocationIfExist() {
+        try {
+            if (latitude != -1. && longitude != -1.) {
+                EditText etLocationInput = (EditText) findViewById(R.id.location_input);
 
-            //get address from longitude & latitude
-            String address = getCompleteAddressString(latitude, longitude);
+                //get address from longitude & latitude
+                String address = getCompleteAddressString(latitude, longitude);
 
-            //update location input
-            etLocationInput.setText(address);
+                //update location input
+                etLocationInput.setText(address);
 
-            // update whole map
-            lookUp(address);
+                // update whole map
+                lookUp(address);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -159,7 +168,7 @@ public class LocationActivity extends FragmentActivity {
                 RadioGroup g = (RadioGroup) findViewById(R.id.radioGroup);
                 int selected = g.getCheckedRadioButtonId();
                 RadioButton b = (RadioButton) findViewById(selected);
-                radius=Integer.parseInt(b.getText().toString());
+                radius = Integer.parseInt(b.getText().toString());
             } else {
                 out = "Not found";
             }
@@ -171,46 +180,56 @@ public class LocationActivity extends FragmentActivity {
 
     /**
      * Display a marker on the map and reposition the camera according to location
+     *
      * @param latLng
      */
-    private void updateMap(LatLng latLng){
-        if (mGoogleMap==null){
-            return; //no play services
+    private void updateMap(LatLng latLng) {
+        try {
+            if (mGoogleMap == null) {
+                return; //no play services
+            }
+
+            if (marker != null) {
+                marker.remove();
+            }
+
+            marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng));
+
+            //reposition camera
+            CameraPosition newPosition = new CameraPosition.Builder()
+                    .target(latLng)
+                    .zoom(15)
+                    .build();
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPosition));
+            System.out.println("update-map-seccessfully");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        if (marker!=null){
-            marker.remove();
-        }
-
-        marker = mGoogleMap.addMarker(new MarkerOptions().position(latLng));
-
-        //reposition camera
-        CameraPosition newPosition = new CameraPosition.Builder()
-                .target(latLng)
-                .zoom(15)
-                .build();
-        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(newPosition));
-        System.out.println("update-map-seccessfully");
     }
 
 
-    public void locationSetButton (View v){
-        Intent data = new Intent();
+    public void locationSetButton(View v) {
+        try {
+            Intent data = new Intent();
 
-                System.out.println("Location Activity:");
-                System.out.println("longitude="+longitude);
-                System.out.println("latitude="+latitude);
-                System.out.println("radius="+radius);
+            System.out.println("Location Activity:");
+            System.out.println("longitude=" + longitude);
+            System.out.println("latitude=" + latitude);
+            System.out.println("radius=" + radius);
 
-        //---set the data to pass back---
-        data.putExtra("longitude", longitude);
-        data.putExtra("latitude", latitude);
-        data.putExtra("radius", radius);
-        setResult(RESULT_OK, data);
-        //---closes the activity---
-        finish();
+            //---set the data to pass back---
+            data.putExtra("longitude", longitude);
+            data.putExtra("latitude", latitude);
+            data.putExtra("radius", radius);
+            setResult(RESULT_OK, data);
+            //---closes the activity---
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    public void locationCancelButton (View v){
+
+    public void locationCancelButton(View v) {
         finish();
     }
 }

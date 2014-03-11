@@ -3,6 +3,7 @@ package com.oa.task2do;
 /**
  * Created by Avishay on 26/02/14.
  */
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,7 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 
 
-public class LocationNotification  extends BroadcastReceiver {
+public class LocationNotification extends BroadcastReceiver {
 
     private NotificationManager nm;
 
@@ -19,7 +20,7 @@ public class LocationNotification  extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
 
-        NotificationManager notificationManager = (NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Get taskId & message
         int taskId = intent.getIntExtra("taskId", 0);
@@ -27,7 +28,7 @@ public class LocationNotification  extends BroadcastReceiver {
 
         Intent myIntent = new Intent(context, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, taskId, myIntent,  PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, taskId, myIntent, PendingIntent.FLAG_ONE_SHOT);
 
 //        Notification notification = new Notification(R.drawable.ic_launcher, "task notification", System.currentTimeMillis());
 //        notification.setLatestEventInfo( context,"Task2Do", notificationText, pendingIntent);
@@ -39,8 +40,8 @@ public class LocationNotification  extends BroadcastReceiver {
 //        vibrator.vibrate(200);
 
         nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notif = new Notification(R.drawable.ic_launcher,"",System.currentTimeMillis());
-        notif.setLatestEventInfo(context,"Proximity Alert!",notificationText,pendingIntent);
+        Notification notif = new Notification(R.drawable.ic_launcher, "", System.currentTimeMillis());
+        notif.setLatestEventInfo(context, "Proximity Alert!", notificationText, pendingIntent);
         notif.flags |= Notification.FLAG_AUTO_CANCEL;
         //notif.defaults |= Notification.DEFAULT_SOUND;
         notif.defaults |= Notification.DEFAULT_SOUND;

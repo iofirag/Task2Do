@@ -5,7 +5,7 @@ package com.oa.task2do;
  */
 public class Task {
     int _id;
-    public String _taskMessage ;
+    public String _taskMessage;
     public int _dateYear;
     public int _dateMonth;
     public int _dateDay;
@@ -17,7 +17,7 @@ public class Task {
     public int _done;
 
 
-    public Task(int id, String taskMessage, int dateYear, int dateMonth, int dateDay, int timeHour, int timeMinute, double mapLongitude, double mapLatitude ,int alarm , int done) {
+    public Task(int id, String taskMessage, int dateYear, int dateMonth, int dateDay, int timeHour, int timeMinute, double mapLongitude, double mapLatitude, int alarm, int done) {
        /* alarm */
 //        if ( (dateYear!=-1&&dateMonth!=-1&&dateDay!=-1) || (timeHour!=-1&&timeMinute!=-1) || (mapLongitude!=-1&&mapLatitude!=-1) )
 //            _alarm=true;
@@ -25,21 +25,21 @@ public class Task {
         /* done */
         //do something with done
 
-        this._id=id;
-        this._taskMessage=taskMessage;
+        this._id = id;
+        this._taskMessage = taskMessage;
 
-        this._dateYear= dateYear;
-        this._dateMonth=dateMonth;
-        this._dateDay=dateDay;
+        this._dateYear = dateYear;
+        this._dateMonth = dateMonth;
+        this._dateDay = dateDay;
 
-        this._timeHour=timeHour;
-        this._timeMinute=timeMinute;
+        this._timeHour = timeHour;
+        this._timeMinute = timeMinute;
 
-        this._mapLongitude=mapLongitude;
-        this._mapLatitude=mapLatitude;
+        this._mapLongitude = mapLongitude;
+        this._mapLatitude = mapLatitude;
 
-        this._alarm=alarm;
-        this._done=done;
+        this._alarm = alarm;
+        this._done = done;
     }
 
     public Task() {
@@ -48,6 +48,7 @@ public class Task {
     public int get_id() {
         return _id;
     }
+
     public void set_id(int _id) {
         this._id = _id;
     }
@@ -59,37 +60,40 @@ public class Task {
     public String getTaskMessage() {
         return _taskMessage;
     }
+
     public void setTaskMessage(String name) {
         this._taskMessage = name;
     }
 
     // set/get ID
-    public int getID(){
+    public int getID() {
         return this._id;
     }
-    public void setID(int id){
+
+    public void setID(int id) {
         this._id = id;
     }
 
     @Override
-    public String toString (){
+    public String toString() {
         return this._taskMessage;
     }
 
     // set/get Alarm
-    public int get_alarm(){
+    public int get_alarm() {
         return this._alarm;
     }
-    public void set_alarm(int alarm){
+
+    public void set_alarm(int alarm) {
         this._alarm = alarm;
     }
 
     // set/get Done
-    public int get_done(){
+    public int get_done() {
         return this._done;
     }
 
-    public void set_done(int done){
+    public void set_done(int done) {
         this._done = done;
     }
 

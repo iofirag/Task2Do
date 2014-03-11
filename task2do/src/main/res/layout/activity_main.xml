@@ -49,7 +49,6 @@
         android:weightSum="1"
         android:id="@+id/extraOptions"
         android:visibility="gone"
-        android:onClick="show"
         android:background="#ffffff">
 
         <ImageButton

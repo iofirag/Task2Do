@@ -10,7 +10,7 @@ import android.os.Bundle;
  */
 public class AlertDialog extends DialogFragment {
 
-    boolean editMode =false;
+    boolean editMode = false;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -24,18 +24,18 @@ public class AlertDialog extends DialogFragment {
         alertDialogBuilder
                 .setMessage("do you want to delete?")
                 .setCancelable(false)
-                .setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog,int id) {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, close
                         // current activity
-                        editMode=true;
+                        editMode = true;
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // if this button is clicked, just close
                         // the dialog box and do nothing
-                        editMode=false;
+                        editMode = false;
                         dialog.cancel();
                     }
                 });

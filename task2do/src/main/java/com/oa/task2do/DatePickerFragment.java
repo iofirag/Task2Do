@@ -15,7 +15,7 @@ import java.util.Calendar;
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
-    boolean editMode =false;
+    boolean editMode = false;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -26,17 +26,16 @@ public class DatePickerFragment extends DialogFragment
         int day = -1;
 
         /* if there is data passed */
-        if (getArguments() != null){
-            try{
-                year    = getArguments().getInt("dateYear");
-                month   = getArguments().getInt("dateMonth")-1;
-                day     = getArguments().getInt("dateDay");
-                editMode=true;
-            }catch (Exception e){
+        if (getArguments() != null) {
+            try {
+                year = getArguments().getInt("dateYear");
+                month = getArguments().getInt("dateMonth") - 1;
+                day = getArguments().getInt("dateDay");
+                editMode = true;
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else{
+        } else {
             // Use the current date as the default date in the picker
             year = c.get(Calendar.YEAR);
             month = c.get(Calendar.MONTH);
@@ -57,7 +56,7 @@ public class DatePickerFragment extends DialogFragment
         month++;
 
         System.out.println("****************************************");
-        System.out.println(day+":"+month+":"+year);
+        System.out.println(day + ":" + month + ":" + year);
         System.out.println("****************************************");
 
         // Return input text to activity

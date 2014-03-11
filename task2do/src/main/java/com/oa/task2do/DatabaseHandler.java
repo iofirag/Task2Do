@@ -38,7 +38,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_LOCATION_LATITUDE = "latitude";
     private static final String KEY_ALARM = "alarm";
     private static final String KEY_DONE = "done";
-    private static final String[] COLUMNS = {KEY_ID,KEY_MESSAGE};
+    private static final String[] COLUMNS = {KEY_ID, KEY_MESSAGE};
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -49,16 +49,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String CREATE_TASKS_TABLE = "CREATE TABLE " + TABLE_TASKS
                 + "("
-                + KEY_ID                + " INTEGER PRIMARY KEY, "
-                + KEY_MESSAGE           + " , "
-                + KEY_DATE_YEAR         + " , "
-                + KEY_DATE_MONTH        + " , "
-                + KEY_DATE_DAY          + " , "
-                + KEY_TIME_HOUR         + " , "
-                + KEY_TIME_MINUTES      + " , "
-                + KEY_LOCATION_LONGITUDE+ " , "
+                + KEY_ID + " INTEGER PRIMARY KEY, "
+                + KEY_MESSAGE + " , "
+                + KEY_DATE_YEAR + " , "
+                + KEY_DATE_MONTH + " , "
+                + KEY_DATE_DAY + " , "
+                + KEY_TIME_HOUR + " , "
+                + KEY_TIME_MINUTES + " , "
+                + KEY_LOCATION_LONGITUDE + " , "
                 + KEY_LOCATION_LATITUDE + " , "
-                + KEY_ALARM             + " , "
+                + KEY_ALARM + " , "
                 + KEY_DONE
                 + ")";
         db.execSQL(CREATE_TASKS_TABLE);
@@ -100,17 +100,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_DONE, task._done);
 
         // Inserting Row
-        db.insert(TABLE_TASKS, null, values );
+        db.insert(TABLE_TASKS, null, values);
         db.close(); // Closing database connection
     }
 
 
-    public Task getTask(int id){
+    public Task getTask(int id) {
 
         // 1. get reference to readable DB
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor =  db.rawQuery("select * from " + TABLE_TASKS + " where " + id + "=" + KEY_ID, null);
+        Cursor cursor = db.rawQuery("select * from " + TABLE_TASKS + " where " + id + "=" + KEY_ID, null);
         // 2. build query
 //        Cursor cursor =
 //                db.query(TABLE_TASKS, // a. table
@@ -189,7 +189,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     // Update a single task
     public void updateTask(Task task) {
         SQLiteDatabase db = this.getWritableDatabase();
-         // The fields
+        // The fields
         ContentValues con = new ContentValues();
         con.put(KEY_ID, task.get_id());
         con.put(KEY_MESSAGE, task._taskMessage);
@@ -203,8 +203,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         con.put(KEY_ALARM, task._alarm);
         con.put(KEY_DONE, task._done);
 
-        db.update(TABLE_TASKS, con, KEY_ID +" = ?",
-                new String[] { String.valueOf(task.getID()) });
+        db.update(TABLE_TASKS, con, KEY_ID + " = ?",
+                new String[]{String.valueOf(task.getID())});
         db.close();
     }
 
@@ -219,14 +219,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // return count
         return cursor.getCount();
     }
-
-
-
-
-
-
-
-
 
 
 }

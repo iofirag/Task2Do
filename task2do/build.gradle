@@ -15,7 +15,7 @@ repositories {
 android {
     // change from compileSdkVersion 19 to..
     compileSdkVersion "Google Inc.:Google APIs:19"
-    buildToolsVersion '19.0.0'
+    buildToolsVersion '19.0.3'
 
     defaultConfig {
         minSdkVersion 11
