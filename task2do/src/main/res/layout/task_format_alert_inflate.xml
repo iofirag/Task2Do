@@ -17,7 +17,7 @@
             android:layout_height="50dp"
             android:id="@+id/alarmImage"
             android:visibility="visible"
-            android:background="@drawable/bell1" />
+            android:background="@drawable/bell" />
 
         <TextView
             android:layout_width="fill_parent"

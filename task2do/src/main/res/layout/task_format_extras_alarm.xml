@@ -25,7 +25,7 @@
             android:layout_height="50dp"
             android:id="@+id/imageView"
             android:visibility="visible"
-            android:background="@drawable/bell1" />
+            android:background="@drawable/bell" />
 
         <TextView
             android:layout_width="fill_parent"
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ibtDate_newTask"
-            android:background="@android:drawable/ic_menu_today"
+            android:background="@android:drawable/ic_menu_month"
             android:onClick="showDatePickerDialog" />
 
         <TableLayout
@@ -99,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ibtLocation_newTask"
-            android:background="@android:drawable/ic_dialog_map"
+            android:background="@android:drawable/ic_menu_compass"
             android:onClick="showLocationDialog"
             android:visibility="visible" />
 

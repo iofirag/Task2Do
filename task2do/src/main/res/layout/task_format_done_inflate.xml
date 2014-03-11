@@ -35,7 +35,7 @@
             android:id="@+id/removeTaskButton"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/abc_ic_cab_done_holo_light"
+            android:background="@android:drawable/ic_menu_delete"
             android:layout_alignBottom="@+id/taskText"
             android:lines="1"
             android:layout_toRightOf="@+id/taskText"

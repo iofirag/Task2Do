@@ -14,7 +14,7 @@
         android:layout_height="62dp"
         android:id="@+id/newTaskLine_button"
         android:weightSum="1"
-        android:background="#ffffff">
+        android:background="#6fff90">
 
         <EditText
             android:layout_width="wrap_content"
@@ -49,7 +49,7 @@
         android:weightSum="1"
         android:id="@+id/extraOptions"
         android:visibility="gone"
-        android:background="#ffffff">
+        android:background="#6fff90">
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ibtDate_newTask"
-            android:background="@android:drawable/ic_menu_today"
+            android:background="@android:drawable/ic_menu_month"
             android:onClick="showDatePickerDialog" />
 
         <TableLayout
@@ -79,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/ibtLocation_newTask"
-            android:background="@android:drawable/ic_dialog_map"
+            android:background="@android:drawable/ic_menu_compass"
             android:onClick="showLocationDialog" />
 
         <TableLayout
