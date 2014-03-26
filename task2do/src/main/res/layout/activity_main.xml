@@ -95,15 +95,20 @@
             android:onClick="showVoiceDialog" />
     </LinearLayout>
 
-    <ListView
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/listView"
-        android:choiceMode="singleChoice"
-        android:clickable="true"
-        android:longClickable="true"
-        android:stackFromBottom="false"
-        android:paddingTop="5pt"
-        android:layout_marginLeft="10dp" />
+        android:layout_height="fill_parent"
+        android:paddingLeft="12dp">
+
+        <ListView
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/listView"
+            android:choiceMode="singleChoice"
+            android:clickable="true"
+            android:longClickable="true"
+            android:stackFromBottom="false"/>
+    </LinearLayout>
 
 </LinearLayout>
