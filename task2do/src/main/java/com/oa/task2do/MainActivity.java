@@ -28,6 +28,8 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.analytics.tracking.android.EasyTracker;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -60,6 +62,21 @@ public class MainActivity extends FragmentActivity implements DialogListener {
     //location alert
     private LocationManager lm = null;
 
+
+    /**
+     * google analytics
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        EasyTracker.getInstance().activityStart(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EasyTracker.getInstance().activityStop(this);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
